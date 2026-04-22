@@ -1,0 +1,1002 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hot Seat — Hope Coder</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:       #08051a;
+  --bg2:      #110d2e;
+  --bg3:      #1a1550;
+  --gold:     #ffd700;
+  --gold2:    #ffaa00;
+  --purple:   #7c5cfc;
+  --purple2:  #a78bfa;
+  --teal:     #0ef0c0;
+  --pink:     #ff4d8d;
+  --white:    #f0eeff;
+  --muted:    #7a72a0;
+  --card:     rgba(255,255,255,0.04);
+  --border:   rgba(255,255,255,0.08);
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-family:'DM Sans',sans-serif;color:var(--white)}
+
+/* STARS */
+#stars{position:fixed;inset:0;pointer-events:none;z-index:0}
+
+/* SCREENS */
+.screen{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:1;opacity:0;pointer-events:none;transition:opacity .4s}
+.screen.active{opacity:1;pointer-events:all}
+
+/* ─── INTRO ─────────────────────────────────────────────── */
+#intro{background:transparent}
+.intro-line{font-family:'Bebas Neue',sans-serif;letter-spacing:.12em;text-align:center;opacity:0;transform:translateY(20px);transition:opacity .6s, transform .6s}
+.intro-presenter{font-size:clamp(22px,3vw,38px);color:var(--white)}
+.intro-title{font-size:clamp(72px,12vw,140px);color:var(--gold);line-height:.9;margin-top:8px;text-shadow:0 0 60px rgba(255,215,0,.35)}
+.intro-sub{font-size:clamp(14px,1.8vw,20px);color:var(--purple2);margin-top:12px;font-family:'DM Sans',sans-serif;letter-spacing:.2em;text-transform:uppercase}
+.intro-line.show{opacity:1;transform:translateY(0)}
+.intro-skip{position:absolute;bottom:32px;color:var(--muted);font-size:13px;cursor:pointer;letter-spacing:.1em;text-transform:uppercase}
+.intro-skip:hover{color:var(--white)}
+
+/* ─── SETUP ─────────────────────────────────────────────── */
+#setup{overflow-y:auto;justify-content:center;padding:28px 20px 40px}
+.setup-header{text-align:center;margin-bottom:28px}
+.setup-header h1{font-family:'Bebas Neue',sans-serif;font-size:52px;color:var(--gold);letter-spacing:.1em}
+.setup-header p{color:var(--purple2);font-size:15px;margin-top:4px}
+.setup-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;width:100%;max-width:960px}
+.setup-col{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px}
+.setup-col h2{font-size:16px;font-weight:700;color:var(--purple2);text-transform:uppercase;letter-spacing:.1em;margin-bottom:14px}
+.input-row{display:flex;gap:8px;margin-bottom:14px}
+.input-row input{flex:1;background:rgba(255,255,255,.06);border:1px solid var(--border);border-radius:10px;padding:10px 14px;color:var(--white);font-family:'DM Sans',sans-serif;font-size:15px;outline:none;transition:border-color .2s}
+.input-row input:focus{border-color:var(--purple)}
+.input-row input::placeholder{color:var(--muted)}
+.btn{padding:10px 18px;border-radius:10px;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:700;font-size:14px;transition:all .15s;white-space:nowrap}
+.btn-purple{background:var(--purple);color:#fff}
+.btn-purple:hover{background:#9b7dff;transform:translateY(-1px)}
+.tag-list{display:flex;flex-wrap:wrap;gap:6px;min-height:32px}
+.tag{display:flex;align-items:center;gap:6px;background:rgba(124,92,252,.25);border:1px solid rgba(124,92,252,.4);border-radius:20px;padding:5px 10px 5px 12px;font-size:13px;color:var(--white)}
+.tag.challenge-tag{background:rgba(14,240,192,.15);border-color:rgba(14,240,192,.3)}
+.tag button{background:none;border:none;color:var(--muted);cursor:pointer;font-size:14px;line-height:1;padding:0;transition:color .15s}
+.tag button:hover{color:var(--white)}
+.start-wrap{grid-column:1/-1;display:flex;justify-content:center;margin-top:8px}
+.btn-start{background:linear-gradient(135deg,#0ef0c0,#0abf99);color:#08051a;font-size:18px;font-weight:700;padding:16px 56px;border-radius:14px;font-family:'Bebas Neue',sans-serif;letter-spacing:.15em;box-shadow:0 0 30px rgba(14,240,192,.25);transition:all .2s}
+.btn-start:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 0 50px rgba(14,240,192,.4)}
+.btn-start:disabled{opacity:.35;cursor:not-allowed;transform:none}
+/* ─── CHALLENGE SUGGESTIONS ──────────────────────────────── */
+.suggest-toggle{display:flex;align-items:center;gap:8px;margin-top:12px;cursor:pointer;color:var(--teal);font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;user-select:none;width:fit-content}
+.suggest-toggle:hover{color:#4fffd4}
+.suggest-toggle .arrow{transition:transform .25s;display:inline-block}
+.suggest-toggle.open .arrow{transform:rotate(90deg)}
+.suggest-panel{display:none;margin-top:10px;border:1px solid rgba(14,240,192,.2);border-radius:12px;overflow:hidden}
+.suggest-panel.open{display:block}
+.suggest-cats{display:flex;flex-wrap:wrap;gap:6px;padding:10px 12px;background:rgba(14,240,192,.04);border-bottom:1px solid rgba(14,240,192,.1)}
+.cat-btn{padding:5px 12px;border-radius:20px;border:1px solid rgba(14,240,192,.3);background:transparent;color:var(--teal);font-size:12px;font-weight:700;cursor:pointer;letter-spacing:.06em;transition:all .15s}
+.cat-btn:hover,.cat-btn.active{background:rgba(14,240,192,.18);border-color:var(--teal)}
+.suggest-list{display:flex;flex-wrap:wrap;gap:6px;padding:10px 12px;max-height:160px;overflow-y:auto}
+.suggest-list::-webkit-scrollbar{width:4px}
+.suggest-list::-webkit-scrollbar-track{background:transparent}
+.suggest-list::-webkit-scrollbar-thumb{background:rgba(14,240,192,.3);border-radius:4px}
+.sugg-chip{padding:5px 11px;border-radius:16px;background:rgba(14,240,192,.1);border:1px solid rgba(14,240,192,.2);color:var(--white);font-size:12px;cursor:pointer;transition:all .15s}
+.sugg-chip:hover{background:rgba(14,240,192,.25);border-color:var(--teal);transform:translateY(-1px)}
+
+/* ─── GAME (PLAY) ────────────────────────────────────────── */
+#game{flex-direction:column;padding:16px;gap:12px;align-items:center;justify-content:center}
+#nameWheelWrap{max-width:none!important;width:clamp(280px,44vmin,500px)}
+.game-title{font-family:'Bebas Neue',sans-serif;font-size:42px;color:var(--gold);letter-spacing:.15em;text-align:center}
+.wheels-row{display:flex;gap:24px;align-items:flex-start;justify-content:center;width:100%}
+.wheel-panel{display:flex;flex-direction:column;align-items:center;gap:10px;flex:1;max-width:460px}
+.wheel-label{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:.12em;color:var(--purple2)}
+.wheel-wrap{position:relative;width:100%;max-width:340px;aspect-ratio:1}
+.wheel-wrap canvas{width:100%;height:100%;border-radius:50%;display:block}
+.pointer{position:absolute;top:-4px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:13px solid transparent;border-right:13px solid transparent;border-top:32px solid var(--gold);filter:drop-shadow(0 2px 6px rgba(255,215,0,.6))}
+.spin-btn{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:.15em;padding:12px 42px;border-radius:50px;border:none;cursor:pointer;transition:all .2s;color:#08051a}
+.spin-btn.spin-names{background:linear-gradient(135deg,var(--purple),var(--purple2));color:#fff;box-shadow:0 0 24px rgba(124,92,252,.4)}
+.spin-btn.spin-chals{background:linear-gradient(135deg,var(--teal),#0abf99);color:#08051a;box-shadow:0 0 24px rgba(14,240,192,.35)}
+.spin-btn:hover:not(:disabled){transform:scale(1.06)}
+.spin-btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
+.back-link{color:var(--muted);font-size:13px;cursor:pointer;text-decoration:underline;text-underline-offset:3px;align-self:center}
+.back-link:hover{color:var(--white)}
+
+/* ─── RESULT ─────────────────────────────────────────────── */
+#result{background:rgba(8,5,26,.85)}
+.result-card{background:var(--bg2);border:1px solid rgba(124,92,252,.4);border-radius:24px;padding:40px 52px;text-align:center;max-width:600px;width:90%;box-shadow:0 0 80px rgba(124,92,252,.2);transform:translateY(40px) scale(.95);opacity:0;transition:all .5s cubic-bezier(.34,1.56,.64,1)}
+.result-card.show{transform:translateY(0) scale(1);opacity:1}
+.result-pill{display:inline-block;background:rgba(124,92,252,.2);border:1px solid rgba(124,92,252,.4);border-radius:30px;padding:5px 18px;font-size:12px;letter-spacing:.15em;text-transform:uppercase;color:var(--purple2);margin-bottom:14px}
+.result-name{font-family:'Bebas Neue',sans-serif;font-size:clamp(52px,8vw,88px);color:var(--gold);line-height:1;text-shadow:0 0 40px rgba(255,215,0,.4);animation:pulse 2s ease-in-out infinite}
+.result-divider{width:80px;height:2px;background:linear-gradient(90deg,transparent,var(--purple),transparent);margin:18px auto}
+.result-chal-label{color:var(--muted);font-size:13px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:8px}
+.result-chal{font-size:clamp(18px,3vw,26px);font-weight:700;color:var(--teal);line-height:1.3}
+.result-btns{display:flex;gap:12px;justify-content:center;margin-top:28px;flex-wrap:wrap}
+.btn-again{background:var(--purple);color:#fff;font-size:15px;padding:12px 28px;border-radius:10px}
+.btn-again:hover{background:#9b7dff}
+.btn-edit{background:rgba(255,255,255,.08);color:var(--white);font-size:15px;padding:12px 28px;border-radius:10px;border:1px solid var(--border)}
+.btn-edit:hover{background:rgba(255,255,255,.14)}
+
+/* ─── CONFETTI ────────────────────────────────────────────── */
+#confetti-canvas{position:fixed;inset:0;pointer-events:none;z-index:999}
+
+@keyframes pulse{0%,100%{text-shadow:0 0 40px rgba(255,215,0,.4)} 50%{text-shadow:0 0 80px rgba(255,215,0,.8)}}
+
+/* ─── CHALLENGE SPIN SCREEN ──────────────────────────────── */
+#challenge{flex-direction:column;padding:12px 16px;gap:10px;justify-content:center}
+.chal-header{text-align:center;opacity:0;transform:scale(.8) translateY(-30px);transition:opacity .7s cubic-bezier(.34,1.56,.64,1),transform .7s cubic-bezier(.34,1.56,.64,1)}
+.chal-header.show{opacity:1;transform:scale(1) translateY(0)}
+.chal-what{font-size:clamp(13px,1.8vw,17px);color:var(--muted);letter-spacing:.25em;text-transform:uppercase;margin-bottom:2px}
+.chal-name{font-family:'Bebas Neue',sans-serif;font-size:clamp(48px,8vw,100px);color:var(--gold);line-height:.92;animation:chalGlow 1.5s ease-in-out infinite}
+.chal-sub{font-size:clamp(13px,1.7vw,17px);color:var(--purple2);letter-spacing:.18em;text-transform:uppercase;margin-top:6px}
+.chal-body{display:flex;align-items:center;justify-content:center;gap:32px;width:100%}
+.chal-wheel-outer{opacity:0;transform:translateY(32px) scale(.88);transition:opacity .55s,transform .65s cubic-bezier(.34,1.56,.64,1);transform-origin:center;flex-shrink:0}
+.chal-wheel-outer.show{opacity:1;transform:translateY(0) scale(1)}
+#chalWheelWrap{width:clamp(280px,44vmin,520px);max-width:none}
+.chal-readout{display:flex;flex-direction:column;gap:10px;width:clamp(160px,18vw,240px);flex-shrink:0;opacity:0;transition:opacity .45s}
+.chal-readout.show{opacity:1}
+.chal-readout-label{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+.chal-readout-row{display:flex;align-items:flex-start;gap:8px}
+.chal-readout-arrow{font-size:20px;color:var(--gold);flex-shrink:0;margin-top:2px;animation:arrowBounce .9s ease-in-out infinite}
+.chal-readout-text{font-size:clamp(13px,1.5vw,17px);font-weight:700;color:var(--teal);line-height:1.4;background:rgba(14,240,192,.07);border:1px solid rgba(14,240,192,.22);border-radius:12px;padding:12px 14px;word-break:break-word;min-height:56px;transition:background .12s}
+.chal-readout-text.flash{background:rgba(14,240,192,.24)!important}
+@keyframes arrowBounce{0%,100%{transform:translateX(0)}50%{transform:translateX(-6px)}}
+@keyframes chalGlow{0%,100%{text-shadow:0 0 40px rgba(255,215,0,.4)}50%{text-shadow:0 0 120px rgba(255,215,0,.95),0 0 40px rgba(255,170,0,.6)}}
+@media(max-width:700px){.chal-body{flex-direction:column}.chal-readout{width:90%;flex-direction:row;align-items:center}.chal-readout-label{display:none}}
+
+@media(max-width:640px){
+  .setup-grid{grid-template-columns:1fr}
+  .wheels-row{flex-direction:column;align-items:center}
+  .wheel-panel{max-width:300px;width:100%}
+}
+</style>
+</head>
+<body>
+
+<canvas id="stars"></canvas>
+
+<!-- LEAVE CONFIRM MODAL -->
+<div id="leave-modal" style="display:none;position:fixed;inset:0;z-index:998;background:rgba(8,5,26,.82);align-items:center;justify-content:center;">
+  <div style="background:#110d2e;border:1px solid rgba(124,92,252,.45);border-radius:22px;padding:38px 52px;text-align:center;max-width:380px;width:90%;box-shadow:0 0 60px rgba(124,92,252,.2);">
+    <div style="font-family:'Bebas Neue',sans-serif;font-size:32px;color:var(--gold);letter-spacing:.1em;margin-bottom:10px;">Leave Game?</div>
+    <p style="color:var(--purple2);font-size:15px;margin-bottom:26px;">Are you sure you want to leave?</p>
+    <div style="display:flex;gap:12px;justify-content:center;">
+      <button id="leave-confirm" class="btn" style="background:var(--pink);color:#fff;font-size:15px;padding:12px 28px;border-radius:10px;">Yes, Leave</button>
+      <button id="leave-cancel"  class="btn" style="background:rgba(255,255,255,.08);color:var(--white);font-size:15px;padding:12px 28px;border-radius:10px;border:1px solid var(--border);">Stay</button>
+    </div>
+  </div>
+</div>
+<canvas id="confetti-canvas"></canvas>
+
+<!-- INTRO -->
+<div class="screen active" id="intro">
+  <div class="intro-line intro-presenter" id="iPresenter">Hope Studios Presents...</div>
+  <div class="intro-line intro-title"    id="iTitle">HOT SEAT</div>
+  <div class="intro-line intro-sub"      id="iSub">A Marcos Hope Production</div>
+  <div class="intro-skip" id="introSkip">click to continue</div>
+</div>
+
+<!-- SETUP -->
+<div class="screen" id="setup">
+  <div class="setup-header">
+    <h1>HOT SEAT</h1>
+    <p>Add your players and challenges, then spin both wheels!</p>
+  </div>
+  <div class="setup-grid">
+    <div class="setup-col">
+      <h2>Players</h2>
+      <div class="input-row">
+        <input id="nameInput" placeholder="Enter a name..." maxlength="28" autocomplete="off"/>
+        <button class="btn btn-purple" id="addNameBtn">Add</button>
+      </div>
+      <div class="tag-list" id="nameTags"></div>
+    </div>
+    <div class="setup-col">
+      <h2>Challenges</h2>
+      <div class="input-row">
+        <input id="chalInput" placeholder="Enter a challenge..." maxlength="60" autocomplete="off"/>
+        <button class="btn btn-purple" id="addChalBtn">Add</button>
+      </div>
+      <div class="tag-list" id="chalTags"></div>
+      <!-- SUGGESTIONS -->
+      <div class="suggest-toggle" id="suggestToggle"><span class="arrow">▶</span> Need ideas? Browse challenges</div>
+      <div class="suggest-panel" id="suggestPanel">
+        <div class="suggest-cats" id="suggestCats"></div>
+        <div class="suggest-list" id="suggestList"></div>
+      </div>
+    </div>
+    <div class="start-wrap">
+      <button class="btn btn-start" id="startBtn" disabled>START GAME</button>
+    </div>
+    <div class="hint" id="setupHint"></div>
+  </div>
+</div>
+
+<!-- GAME -->
+<div class="screen" id="game">
+  <div class="game-title">HOT SEAT</div>
+  <div class="chal-body">
+    <div class="chal-readout" id="nameReadout">
+      <div class="chal-readout-label">Pointing at</div>
+      <div class="chal-readout-row">
+        <div class="chal-readout-arrow">◀</div>
+        <div class="chal-readout-text" id="nameReadoutText">—</div>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:12px">
+      <div class="wheel-wrap" id="nameWheelWrap">
+        <canvas id="nameWheel"></canvas>
+        <div class="pointer"></div>
+      </div>
+      <button class="spin-btn spin-names" id="spinNamesBtn">SPIN!</button>
+    </div>
+  </div>
+  <span class="back-link" id="backToSetup">← Edit Players & Challenges</span>
+</div>
+
+<!-- CHALLENGE -->
+<div class="screen" id="challenge">
+  <div class="chal-header" id="chalHeader">
+    <div class="chal-what">What will</div>
+    <div class="chal-name" id="chalSpinName">—</div>
+    <div class="chal-sub">challenge be?</div>
+  </div>
+  <div class="chal-body">
+    <div class="chal-readout" id="chalReadout">
+      <div class="chal-readout-label">Pointing at</div>
+      <div class="chal-readout-row">
+        <div class="chal-readout-arrow">◀</div>
+        <div class="chal-readout-text" id="chalReadoutText">—</div>
+      </div>
+    </div>
+    <div class="chal-wheel-outer" id="chalWheelOuter">
+      <div class="wheel-wrap" id="chalWheelWrap">
+        <canvas id="chalWheel"></canvas>
+        <div class="pointer"></div>
+      </div>
+      <button class="spin-btn spin-chals" id="spinChalBtn" disabled style="opacity:0;transition:opacity .4s">SPIN!</button>
+    </div>
+  </div>
+</div>
+
+<!-- RESULT -->
+<div class="screen" id="result">
+  <div class="result-card" id="resultCard">
+    <div class="result-pill">In the Hot Seat</div>
+    <div class="result-name" id="resultName">—</div>
+    <div class="result-divider"></div>
+    <div class="result-chal-label">Challenge</div>
+    <div class="result-chal" id="resultChal">—</div>
+    <div class="result-btns">
+      <button class="btn btn-again" id="spinAgainBtn">Spin Again</button>
+      <button class="btn btn-edit"  id="editBtn">Edit Players</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ─── STARS ─────────────────────────────────────────────────────────────────
+(function(){
+  const c=document.getElementById('stars');
+  const ctx=c.getContext('2d');
+
+  let stars=[];
+  function initStars(){
+    c.width=window.innerWidth; c.height=window.innerHeight;
+    stars=[];
+    for(let i=0;i<180;i++){
+      const angle=Math.random()*Math.PI*2;
+      const spd=0.08+Math.random()*0.18;
+      stars.push({
+        x:Math.random()*c.width,
+        y:Math.random()*c.height,
+        baseR:Math.random()*1.4+0.4,
+        pulseAmp:Math.random()*1.2+0.4,
+        baseA:Math.random()*0.5+0.15,
+        phase:Math.random()*Math.PI*2,
+        pulsePhase:Math.random()*Math.PI*2,
+        speed:Math.random()*0.5+0.2,
+        pulseSpeed:Math.random()*0.4+0.15,
+        vx:Math.cos(angle)*spd,
+        vy:Math.sin(angle)*spd
+      });
+    }
+  }
+
+  let lastT=0;
+  function drawStars(t){
+    const dt=t-lastT; lastT=t;
+    ctx.clearRect(0,0,c.width,c.height);
+    const ts=t/1000;
+    stars.forEach(s=>{
+      s.x+=s.vx*dt*0.06;
+      s.y+=s.vy*dt*0.06;
+      if(s.x<-4) s.x=c.width+4;
+      else if(s.x>c.width+4) s.x=-4;
+      if(s.y<-4) s.y=c.height+4;
+      else if(s.y>c.height+4) s.y=-4;
+      const a=s.baseA*(0.5+0.5*Math.sin(ts*s.speed+s.phase));
+      const r=s.baseR+s.pulseAmp*(0.5+0.5*Math.sin(ts*s.pulseSpeed+s.pulsePhase));
+      ctx.beginPath(); ctx.arc(s.x,s.y,r,0,Math.PI*2);
+      ctx.fillStyle=`rgba(200,190,255,${a})`; ctx.fill();
+    });
+    requestAnimationFrame(drawStars);
+  }
+
+  initStars();
+  requestAnimationFrame(drawStars);
+
+  window._reinitStars=initStars;
+})();
+
+// ─── AUDIO ─────────────────────────────────────────────────────────────────
+const AC = new (window.AudioContext||window.webkitAudioContext)();
+function resumeAC(){ if(AC.state==='suspended') AC.resume(); }
+
+// Master gain + soft limiter to prevent clipping/distortion
+const masterGain = AC.createGain();
+masterGain.gain.value = 0.7;
+const compressor = AC.createDynamicsCompressor();
+compressor.threshold.value = -12;
+compressor.knee.value = 6;
+compressor.ratio.value = 4;
+compressor.attack.value = 0.003;
+compressor.release.value = 0.15;
+masterGain.connect(compressor);
+compressor.connect(AC.destination);
+
+function mkOsc(freq, type='sine'){
+  const osc = AC.createOscillator();
+  osc.type = type;
+  osc.frequency.value = freq;
+  return osc;
+}
+function mkGain(val=0){
+  const g = AC.createGain();
+  g.gain.value = val;
+  return g;
+}
+
+// Smooth envelope helper: attack, sustain, release
+function envelope(gainNode, vol, atk, sus, rel, startT){
+  const g = gainNode.gain;
+  g.setValueAtTime(0, startT);
+  g.linearRampToValueAtTime(vol, startT + atk);
+  g.setValueAtTime(vol, startT + atk + sus);
+  g.exponentialRampToValueAtTime(0.0001, startT + atk + sus + rel);
+}
+
+function playClick(){
+  resumeAC();
+  const t = AC.currentTime;
+  // Short sine blip — clean, no noise
+  const osc = mkOsc(480, 'sine');
+  const g = mkGain();
+  osc.connect(g); g.connect(masterGain);
+  envelope(g, 0.35, 0.002, 0.01, 0.06, t);
+  osc.start(t); osc.stop(t + 0.1);
+}
+
+function playWhoosh(){
+  resumeAC();
+  const t = AC.currentTime;
+  const dur = 0.4;
+  // Filtered noise sweep for clean whoosh
+  const bufSize = AC.sampleRate * dur;
+  const buf = AC.createBuffer(1, bufSize, AC.sampleRate);
+  const d = buf.getChannelData(0);
+  for(let i=0;i<bufSize;i++) d[i] = Math.random()*2-1;
+  const src = AC.createBufferSource(); src.buffer = buf;
+  const filter = AC.createBiquadFilter();
+  filter.type = 'bandpass';
+  filter.frequency.setValueAtTime(400, t);
+  filter.frequency.exponentialRampToValueAtTime(2400, t + dur);
+  filter.Q.value = 0.8;
+  const g = mkGain();
+  src.connect(filter); filter.connect(g); g.connect(masterGain);
+  envelope(g, 0.28, 0.02, 0.1, 0.28, t);
+  src.start(t); src.stop(t + dur + 0.05);
+}
+
+function playTick(pitch=1){
+  resumeAC();
+  const t = AC.currentTime;
+  // Clean sine tick — no harsh noise
+  const osc = mkOsc(600 * pitch, 'sine');
+  const g = mkGain();
+  osc.connect(g); g.connect(masterGain);
+  envelope(g, 0.22, 0.001, 0.005, 0.04, t);
+  osc.start(t); osc.stop(t + 0.055);
+}
+
+function playFanfare(){
+  resumeAC();
+  // Chord-based fanfare with smooth ADSR — no harsh transients
+  const chords = [
+    { notes:[523.25, 659.25], dur:0.18, vol:0.22 },
+    { notes:[659.25, 783.99], dur:0.18, vol:0.22 },
+    { notes:[783.99, 987.77], dur:0.18, vol:0.22 },
+    { notes:[1046.5, 1318.5], dur:0.55, vol:0.28 },
+    { notes:[1046.5, 1318.5, 1567.98], dur:0.55, vol:0.32 },
+  ];
+  let t = AC.currentTime + 0.02;
+  chords.forEach(({ notes, dur, vol }) => {
+    notes.forEach(freq => {
+      const osc = mkOsc(freq, 'triangle');
+      const g = mkGain();
+      osc.connect(g); g.connect(masterGain);
+      envelope(g, vol / notes.length, 0.015, dur * 0.5, dur * 0.45, t);
+      osc.start(t); osc.stop(t + dur + 0.1);
+    });
+    t += dur * 0.85;
+  });
+}
+
+// ─── CONFETTI ──────────────────────────────────────────────────────────────
+const confCanvas=document.getElementById('confetti-canvas');
+const confCtx=confCanvas.getContext('2d');
+confCanvas.width=window.innerWidth; confCanvas.height=window.innerHeight;
+let confetti=[];
+const confColors=['#ffd700','#ff4d8d','#7c5cfc','#0ef0c0','#fb923c','#34d399'];
+
+function burstConfetti(x,y,n=100){
+  for(let i=0;i<n;i++){
+    const a=Math.random()*Math.PI*2;
+    const sp=80+Math.random()*280;
+    confetti.push({
+      x,y,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp,
+      col:confColors[Math.floor(Math.random()*confColors.length)],
+      life:1,sz:4+Math.random()*8,rot:Math.random()*360,rspeed:(Math.random()-.5)*400
+    });
+  }
+}
+
+let lastTime=0;
+function confettiLoop(t){
+  const dt=Math.min((t-lastTime)/1000,.05); lastTime=t;
+  confCtx.clearRect(0,0,confCanvas.width,confCanvas.height);
+  confetti=confetti.filter(p=>p.life>0);
+  confetti.forEach(p=>{
+    p.life-=dt; p.x+=p.vx*dt; p.y+=p.vy*dt;
+    p.vy+=300*dt; p.rot+=p.rspeed*dt;
+    const a=p.life*p.life;
+    confCtx.save();
+    confCtx.globalAlpha=a;
+    confCtx.translate(p.x,p.y); confCtx.rotate(p.rot*Math.PI/180);
+    confCtx.fillStyle=p.col;
+    confCtx.fillRect(-p.sz/2,-p.sz/2,p.sz,p.sz*(0.5+Math.random()*.1));
+    confCtx.restore();
+  });
+  requestAnimationFrame(confettiLoop);
+}
+requestAnimationFrame(confettiLoop);
+
+// ─── WHEEL ENGINE ──────────────────────────────────────────────────────────
+const WHEEL_COLORS=[
+  '#7c5cfc','#0ef0c0','#ff4d8d','#ffd700',
+  '#a78bfa','#0abf99','#ff4d8d','#ffaa00',
+  '#7c5cfc','#0ef0c0','#a78bfa','#ffd700'
+];
+
+function easeOut4(t){ return 1-Math.pow(1-t,4); }
+
+class SpinWheel {
+  constructor(canvasId, items, colorSet){
+    this.canvas=document.getElementById(canvasId);
+    this.ctx=this.canvas.getContext('2d');
+    this.items=items;
+    this.colors=colorSet||WHEEL_COLORS;
+    this.angle=0;
+    this.spinning=false;
+    this.onDone=null;
+    this.resize();
+  }
+
+  resize(){
+    const wrap=this.canvas.parentElement;
+    const sz=wrap.offsetWidth;
+    this.canvas.width=sz*2; this.canvas.height=sz*2;
+    this.canvas.style.width=sz+'px'; this.canvas.style.height=sz+'px';
+    this.draw();
+  }
+
+  draw(){
+    const c=this.canvas, ctx=this.ctx;
+    const sz=c.width, cx=sz/2, cy=sz/2, r=cx-8;
+    ctx.clearRect(0,0,sz,sz);
+    const n=this.items.length;
+    if(!n){
+      ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI*2);
+      ctx.fillStyle='rgba(255,255,255,.05)'; ctx.fill();
+      ctx.fillStyle='rgba(255,255,255,.3)';
+      ctx.font=`bold ${sz*.06}px DM Sans`;
+      ctx.textAlign='center'; ctx.textBaseline='middle';
+      ctx.fillText('No items',cx,cy);
+      return;
+    }
+    const slice=Math.PI*2/n;
+
+    // shadow
+    ctx.save(); ctx.shadowColor='rgba(0,0,0,.5)'; ctx.shadowBlur=20;
+    ctx.beginPath(); ctx.arc(cx+3,cy+5,r,0,Math.PI*2);
+    ctx.fillStyle='rgba(0,0,0,.3)'; ctx.fill(); ctx.restore();
+
+    for(let i=0;i<n;i++){
+      const a0=this.angle+i*slice, a1=a0+slice;
+      ctx.beginPath(); ctx.moveTo(cx,cy);
+      ctx.arc(cx,cy,r,a0,a1); ctx.closePath();
+      ctx.fillStyle=this.colors[i%this.colors.length]; ctx.fill();
+      ctx.strokeStyle='rgba(255,255,255,.15)'; ctx.lineWidth=2; ctx.stroke();
+    }
+
+    // labels
+    ctx.save();
+    for(let i=0;i<n;i++){
+      const a=this.angle+i*slice+slice/2;
+      ctx.save();
+      ctx.translate(cx,cy); ctx.rotate(a+Math.PI/2);
+      ctx.textAlign='center'; ctx.textBaseline='middle';
+      ctx.fillStyle='rgba(255,255,255,.95)';
+      let label=this.items[i]; if(label.length>14) label=label.slice(0,13)+'…';
+      const fsz=Math.max(Math.floor(r*.11),11);
+      ctx.font=`bold ${fsz}px 'DM Sans', sans-serif`;
+      ctx.shadowColor='rgba(0,0,0,.6)'; ctx.shadowBlur=4;
+      ctx.fillText(label,0,-r*.58);
+      ctx.restore();
+    }
+    ctx.restore();
+
+    // rim
+    ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI*2);
+    ctx.strokeStyle='rgba(255,255,255,.25)'; ctx.lineWidth=4; ctx.stroke();
+
+    // stoppers — pegs on the rim that hit the notch
+    for(let i=0;i<n;i++){
+      const a=this.angle+i*slice;
+      ctx.save();
+      ctx.translate(cx,cy);
+      ctx.rotate(a);
+      ctx.beginPath();
+      ctx.moveTo(r-3,-5); ctx.lineTo(r+11,0); ctx.lineTo(r-3,5);
+      ctx.closePath();
+      ctx.fillStyle='rgba(255,220,50,.95)';
+      ctx.shadowColor='rgba(255,215,0,.8)'; ctx.shadowBlur=8;
+      ctx.fill();
+      ctx.restore();
+    }
+
+    // center hub
+    ctx.beginPath(); ctx.arc(cx,cy,sz*.055,0,Math.PI*2);
+    ctx.fillStyle='#08051a'; ctx.fill();
+    ctx.strokeStyle='rgba(255,255,255,.5)'; ctx.lineWidth=3; ctx.stroke();
+  }
+
+  spin(onDone, opts={}){
+    if(this.spinning||this.items.length<1) return;
+    this.spinning=true; this._cancelled=false;
+    const velMult=opts.velMult||1;
+    const onProgress=opts.onProgress||null;
+
+    const n=this.items.length;
+    const slice=Math.PI*2/n;
+    const ptr=Math.PI*3/2;
+
+    // Physics: exponential friction decay, k=0.44 for all wheels.
+    // velMult scales initial velocity: 1 = ~15s spin, 3 = ~17s but 3x faster
+    let vel=(28+Math.random()*6)*velMult;
+    const k=0.44;
+
+    const getIdx=()=>{
+      const norm=((ptr-this.angle)%(Math.PI*2)+Math.PI*2)%(Math.PI*2);
+      return Math.floor(norm/slice)%n;
+    };
+
+    let lastIdx=getIdx();
+    let lastTime=performance.now();
+
+    const animate=(now)=>{
+      if(this._cancelled){this.spinning=false;return;}
+      const dt=Math.min((now-lastTime)/1000,0.033);
+      lastTime=now;
+
+      vel*=Math.exp(-k*dt);
+      this.angle+=vel*dt;
+      this.draw();
+
+      // Stopper crossing — peg just hit the notch
+      const curIdx=getIdx();
+      if(curIdx!==lastIdx){
+        const pitch=Math.min(0.45+vel*0.065, 2.2);
+        playTick(pitch);
+        vel*=0.986; // tiny extra drag from the notch impact
+        lastIdx=curIdx;
+        if(onProgress) onProgress();
+      }
+
+      if(vel<0.05){
+        this.spinning=false;
+        this.draw();
+        if(onDone) onDone(getIdx(), this.items[getIdx()]);
+        return;
+      }
+      requestAnimationFrame(animate);
+    };
+
+    lastTime=performance.now();
+    requestAnimationFrame(animate);
+  }
+
+  cancel(){this._cancelled=true;this.spinning=false;}
+
+  getCurrentItem(){
+    if(!this.items.length) return '';
+    const n=this.items.length, slice=Math.PI*2/n;
+    const ptr=Math.PI*3/2;
+    const norm=((ptr-this.angle)%(Math.PI*2)+Math.PI*2)%(Math.PI*2);
+    return this.items[Math.floor(norm/slice)%n];
+  }
+}
+
+// ─── STATE ─────────────────────────────────────────────────────────────────
+let names=[], challenges=[];
+let nameWheel=null, chalWheel=null;
+let lastWinner='', lastChallenge='';
+let bothSpun=false;
+let nameSpunResult=null, chalSpunResult=null;
+
+// ─── INTRO ─────────────────────────────────────────────────────────────────
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>{s.classList.remove('active');});
+  document.getElementById(id).classList.add('active');
+}
+
+(function runIntro(){
+  const pres=document.getElementById('iPresenter');
+  const title=document.getElementById('iTitle');
+  const sub=document.getElementById('iSub');
+
+  function goSetup(){ showScreen('setup'); }
+
+  document.getElementById('introSkip').addEventListener('click',goSetup);
+  document.getElementById('intro').addEventListener('click',goSetup);
+
+  setTimeout(()=>{ pres.classList.add('show'); playWhoosh(); },400);
+  setTimeout(()=>{ title.classList.add('show'); playFanfare(); },1600);
+  setTimeout(()=>{ sub.classList.add('show'); },2200);
+})();
+
+// ─── SETUP ─────────────────────────────────────────────────────────────────
+function renderTags(){
+  const nt=document.getElementById('nameTags');
+  const ct=document.getElementById('chalTags');
+  nt.innerHTML=names.map((n,i)=>
+    `<div class="tag">${n}<button onclick="removeName(${i})" title="Remove">✕</button></div>`
+  ).join('')||'<span style="color:var(--muted);font-size:13px">None yet</span>';
+  ct.innerHTML=challenges.map((c,i)=>
+    `<div class="tag challenge-tag">${c}<button onclick="removeChal(${i})" title="Remove">✕</button></div>`
+  ).join('')||'<span style="color:var(--muted);font-size:13px">None yet</span>';
+  const ok=names.length>=2&&challenges.length>=1;
+  document.getElementById('startBtn').disabled=!ok;
+  let hint='';
+  if(names.length<2) hint+='Need at least 2 players. ';
+  if(!challenges.length) hint+='Need at least 1 challenge.';
+  document.getElementById('setupHint').textContent=hint;
+}
+
+function removeName(i){ names.splice(i,1); renderTags(); }
+function removeChal(i){ challenges.splice(i,1); renderTags(); }
+
+document.getElementById('addNameBtn').addEventListener('click',()=>{
+  const inp=document.getElementById('nameInput');
+  const v=inp.value.trim();
+  if(!v) return;
+  names.push(v); inp.value=''; renderTags(); playClick();
+  inp.focus();
+});
+
+document.getElementById('addChalBtn').addEventListener('click',()=>{
+  const inp=document.getElementById('chalInput');
+  const v=inp.value.trim();
+  if(!v) return;
+  challenges.push(v); inp.value=''; renderTags(); playClick();
+  inp.focus();
+});
+
+['nameInput','chalInput'].forEach(id=>{
+  document.getElementById(id).addEventListener('keydown',e=>{
+    if(e.key==='Enter'){
+      e.preventDefault();
+      document.getElementById(id==='nameInput'?'addNameBtn':'addChalBtn').click();
+    }
+  });
+});
+
+document.getElementById('startBtn').addEventListener('click',()=>{
+  if(names.length<2||!challenges.length) return;
+  playWhoosh();
+  showScreen('game');
+  initWheels();
+});
+
+function initWheels(){
+  nameWheel=new SpinWheel('nameWheel', [...names,...names]);
+  chalWheel=null;
+  nameSpunResult=null; chalSpunResult=null;
+  document.getElementById('spinNamesBtn').disabled=false;
+  const nameReadout=document.getElementById('nameReadout');
+  const nameReadoutText=document.getElementById('nameReadoutText');
+  nameReadout.classList.add('show');
+  nameReadoutText.textContent=nameWheel.getCurrentItem()||'—';
+}
+
+// ─── GAME ──────────────────────────────────────────────────────────────────
+document.getElementById('spinNamesBtn').addEventListener('click',()=>{
+  resumeAC();
+  if(!nameWheel||nameWheel.spinning) return;
+  playWhoosh();
+  document.getElementById('spinNamesBtn').disabled=true;
+  const nameReadoutText=document.getElementById('nameReadoutText');
+  let lastNameItem='';
+  nameWheel.spin((idx,val)=>{
+    nameSpunResult=val;
+    nameReadoutText.textContent=val;
+    setTimeout(()=>showChallengeScreen(val),650);
+  },{
+    onProgress:()=>{
+      const cur=nameWheel.getCurrentItem();
+      if(cur&&cur!==lastNameItem){
+        lastNameItem=cur;
+        nameReadoutText.textContent=cur;
+        nameReadoutText.classList.remove('flash');
+        void nameReadoutText.offsetWidth;
+        nameReadoutText.classList.add('flash');
+      }
+    }
+  });
+});
+
+document.getElementById('backToSetup').addEventListener('click',()=>{
+  showScreen('setup'); renderTags();
+});
+
+document.getElementById('spinChalBtn').addEventListener('click',()=>{
+  resumeAC();
+  if(!chalWheel||chalWheel.spinning) return;
+  document.getElementById('spinChalBtn').disabled=true;
+  spinChallengeWheel();
+});
+
+function showChallengeScreen(name){
+  document.getElementById('chalSpinName').textContent=name;
+  const header=document.getElementById('chalHeader');
+  const outer=document.getElementById('chalWheelOuter');
+  const readout=document.getElementById('chalReadout');
+  const readoutText=document.getElementById('chalReadoutText');
+  header.classList.remove('show');
+  outer.classList.remove('show');
+  readout.classList.remove('show');
+  readoutText.textContent='—';
+
+  showScreen('challenge');
+
+  setTimeout(()=>{ header.classList.add('show'); playWhoosh(); },80);
+  setTimeout(()=>{ outer.classList.add('show'); },420);
+
+  chalWheel=new SpinWheel('chalWheel',[...challenges,...challenges]);
+
+  const spinChalBtn=document.getElementById('spinChalBtn');
+  spinChalBtn.disabled=true;
+  spinChalBtn.style.opacity='0';
+
+  // show readout and enable spin button after entrance
+  setTimeout(()=>{
+    readoutText.textContent=chalWheel.getCurrentItem()||'—';
+    readout.classList.add('show');
+    spinChalBtn.disabled=false;
+    spinChalBtn.style.opacity='1';
+  },800);
+}
+
+function spinChallengeWheel(){
+  if(!chalWheel) return;
+  const outer=document.getElementById('chalWheelOuter');
+  const readoutText=document.getElementById('chalReadoutText');
+  let lastItem='';
+  playWhoosh();
+
+  chalWheel.spin((idx,val)=>{
+    chalSpunResult=val;
+    readoutText.textContent=val;
+    setTimeout(()=>showResult(nameSpunResult,val),500);
+  },{
+    velMult:3,
+    onProgress:()=>{
+      const current=chalWheel.getCurrentItem();
+      if(current && current!==lastItem){
+        lastItem=current;
+        readoutText.textContent=current;
+        readoutText.classList.remove('flash');
+        void readoutText.offsetWidth;
+        readoutText.classList.add('flash');
+      }
+    }
+  });
+}
+
+// ─── RESULT ────────────────────────────────────────────────────────────────
+function showResult(name, chal){
+  document.getElementById('resultName').textContent=name;
+  document.getElementById('resultChal').textContent=chal;
+  showScreen('result');
+  setTimeout(()=>{
+    document.getElementById('resultCard').classList.add('show');
+    playFanfare();
+    burstConfetti(window.innerWidth/2, window.innerHeight/3, 120);
+  },50);
+}
+
+document.getElementById('spinAgainBtn').addEventListener('click',()=>{
+  playClick();
+  document.getElementById('resultCard').classList.remove('show');
+  showScreen('game');
+  setTimeout(()=>{
+    nameSpunResult=null; chalSpunResult=null;
+    if(chalWheel) chalWheel.cancel();
+    chalWheel=null;
+    nameWheel.angle=0; nameWheel.draw();
+    document.getElementById('spinNamesBtn').disabled=false;
+    document.getElementById('nameReadoutText').textContent=nameWheel.getCurrentItem()||'—';
+  },300);
+});
+
+document.getElementById('editBtn').addEventListener('click',()=>{
+  playClick();
+  document.getElementById('resultCard').classList.remove('show');
+  showScreen('setup'); renderTags();
+});
+
+// ─── RESIZE ────────────────────────────────────────────────────────────────
+window.addEventListener('resize',()=>{
+  if(window._reinitStars) window._reinitStars();
+  confCanvas.width=window.innerWidth; confCanvas.height=window.innerHeight;
+  if(nameWheel) nameWheel.resize();
+  if(chalWheel) chalWheel.resize();
+});
+
+// keep chalWheelWrap sized correctly since it lives in a different screen
+new ResizeObserver(()=>{ if(chalWheel) chalWheel.resize(); })
+  .observe(document.getElementById('chalWheelWrap'));
+
+// ─── CHALLENGE SUGGESTIONS ─────────────────────────────────────────────────
+const SUGGESTIONS = {
+  'Funny': [
+    'Do your best celebrity impression','Talk in an accent for 30 seconds',
+    'Tell your most embarrassing story','Make everyone laugh without saying anything',
+    'Do your best slow-motion walk across the room','Narrate your life like a nature documentary',
+    'Speak in rhymes for the next 2 minutes','Do your best old-person impression',
+    'Pretend to be a news anchor reporting on something boring','Try to lick your elbow',
+  ],
+  'Physical': [
+    'Do your best dance move','Do 10 jumping jacks while singing','Moonwalk across the room',
+    'Hold a plank for 20 seconds','Do your best robot dance','Spin 5 times then walk in a straight line',
+    'Act out your favorite movie scene silently','Do the worm (or attempt it)',
+    'Hop on one foot while saying the ABCs','Do your best sports victory celebration',
+  ],
+  'Brain': [
+    'Say the alphabet backwards','Name 10 animals in 10 seconds',
+    'Count to 20 in a different language','Name 5 books of the Bible in 5 seconds',
+    'Spell your full name backwards out loud','Name the 12 disciples in 30 seconds',
+    'Recite a Bible verse from memory','Name 7 fruits that start with a different letter',
+    'List 5 US presidents in 10 seconds','Count backward from 20 by 2s',
+  ],
+  'Perform': [
+    'Sing the first verse of your favorite song','Tell a joke that makes someone laugh',
+    'Beatbox for 15 seconds','Read the next Bible verse in your best dramatic voice',
+    'Freestyle rap about the person to your left','Do a 30-second stand-up comedy bit',
+    'Impersonate your favorite teacher or leader','Recite a tongue twister 3 times fast',
+    'Hum a song until someone guesses it','Describe your week as if it were an epic movie',
+  ],
+  'Social': [
+    'Give everyone in the room a genuine compliment','Share your most unpopular opinion',
+    'Tell us something nobody in the room knows about you','Say something nice about the person to your right',
+    'Share your most embarrassing talent','Describe yourself using only 3 words',
+    'Name your top 3 dream dinner guests (living or dead)','Tell us your weirdest hidden talent',
+    'If you were a pizza topping, what would you be and why?','Share a childhood memory in 30 seconds',
+  ],
+  'Faith': [
+    'Share your favorite Bible verse and why','Name 5 books of the Old Testament',
+    'Share one thing God has been teaching you lately','Describe Jesus in 3 words',
+    'Name the fruit of the Spirit from memory','Share a prayer request with the group',
+    'Tell us about a time God surprised you','Recite the Lord\'s Prayer',
+    'Name 3 parables Jesus told','Share one way you want to grow in faith this year',
+  ],
+};
+
+let activeCat = Object.keys(SUGGESTIONS)[0];
+
+function buildSuggestions(){
+  const catsEl = document.getElementById('suggestCats');
+  const listEl = document.getElementById('suggestList');
+  catsEl.innerHTML = Object.keys(SUGGESTIONS).map(cat =>
+    `<button class="cat-btn${cat===activeCat?' active':''}" onclick="selectCat(this,'${cat}')">${cat}</button>`
+  ).join('');
+  listEl.innerHTML = SUGGESTIONS[activeCat].map(s =>
+    `<div class="sugg-chip" onclick="addSuggestion(this,'${s.replace(/'/g,"\\'").replace(/"/g,'&quot;')}')">${challenges.includes(s)?'✓':'+' } ${s}</div>`
+  ).join('');
+}
+
+function selectCat(el, cat){
+  activeCat = cat;
+  buildSuggestions();
+  playClick();
+}
+
+function addSuggestion(el, s){
+  if(!challenges.includes(s)){
+    challenges.push(s);
+    renderTags();
+    buildSuggestions();
+    playClick();
+  }
+}
+
+document.getElementById('suggestToggle').addEventListener('click', () => {
+  const tog = document.getElementById('suggestToggle');
+  const panel = document.getElementById('suggestPanel');
+  const isOpen = tog.classList.toggle('open');
+  panel.classList.toggle('open', isOpen);
+  if(isOpen) buildSuggestions();
+  playClick();
+});
+
+renderTags();
+
+// ─── ESC NAVIGATION ────────────────────────────────────────────────────────
+const leaveModal = document.getElementById('leave-modal');
+
+function showLeaveModal(){
+  leaveModal.style.display = 'flex';
+  playClick();
+}
+function hideLeaveModal(){
+  leaveModal.style.display = 'none';
+}
+
+document.getElementById('leave-confirm').addEventListener('click', () => {
+  hideLeaveModal();
+  window.close();
+});
+document.getElementById('leave-cancel').addEventListener('click', () => {
+  hideLeaveModal();
+  playClick();
+});
+leaveModal.addEventListener('click', e => {
+  if(e.target === leaveModal) hideLeaveModal();
+});
+
+document.addEventListener('keydown', e => {
+  if(e.key !== 'Escape') return;
+  if(leaveModal.style.display === 'flex'){ hideLeaveModal(); return; }
+  const active = document.querySelector('.screen.active')?.id;
+  if(active === 'result'){
+    playClick();
+    document.getElementById('resultCard').classList.remove('show');
+    showScreen('game');
+  } else if(active === 'challenge'){
+    if(chalWheel) chalWheel.cancel();
+    chalWheel=null;
+    playClick();
+    nameSpunResult=null;
+    nameWheel.angle=0; nameWheel.draw();
+    document.getElementById('spinNamesBtn').disabled=false;
+    showScreen('game');
+  } else if(active === 'game'){
+    playClick();
+    showScreen('setup');
+    renderTags();
+  } else if(active === 'setup'){
+    showLeaveModal();
+  }
+});
+</script>
+</body>
+</html>
