@@ -25,16 +25,22 @@
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-family:'DM Sans',sans-serif;color:var(--white)}
 
-/* STARS */
 #stars{position:fixed;inset:0;pointer-events:none;z-index:0}
 
-/* SCREENS */
 .screen{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:1;opacity:0;pointer-events:none;transition:opacity .4s}
 .screen.active{opacity:1;pointer-events:all}
 
-/* ─── INTRO ─────────────────────────────────────────────── */
+/* ─── ROUND COUNTER ── */
+#round-counter{position:fixed;top:16px;left:16px;z-index:10;font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--gold);letter-spacing:.12em;opacity:0;pointer-events:none;transition:opacity .3s;text-shadow:0 0 20px rgba(255,215,0,.4)}
+#round-counter.visible{opacity:1}
+
+/* ─── FULLSCREEN BTN ── */
+#fullscreen-btn{position:fixed;top:16px;right:16px;z-index:10;background:rgba(255,255,255,.07);border:1px solid var(--border);border-radius:8px;padding:6px 11px;color:var(--muted);font-size:14px;cursor:pointer;transition:all .15s;font-family:'DM Sans',sans-serif;line-height:1}
+#fullscreen-btn:hover{color:var(--white);background:rgba(255,255,255,.12)}
+
+/* ─── INTRO ── */
 #intro{background:transparent}
-.intro-line{font-family:'Bebas Neue',sans-serif;letter-spacing:.12em;text-align:center;opacity:0;transform:translateY(20px);transition:opacity .6s, transform .6s}
+.intro-line{font-family:'Bebas Neue',sans-serif;letter-spacing:.12em;text-align:center;opacity:0;transform:translateY(20px);transition:opacity .6s,transform .6s}
 .intro-presenter{font-size:clamp(22px,3vw,38px);color:var(--white)}
 .intro-title{font-size:clamp(72px,12vw,140px);color:var(--gold);line-height:.9;margin-top:8px;text-shadow:0 0 60px rgba(255,215,0,.35)}
 .intro-sub{font-size:clamp(14px,1.8vw,20px);color:var(--purple2);margin-top:12px;font-family:'DM Sans',sans-serif;letter-spacing:.2em;text-transform:uppercase}
@@ -42,7 +48,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-famil
 .intro-skip{position:absolute;bottom:32px;color:var(--muted);font-size:13px;cursor:pointer;letter-spacing:.1em;text-transform:uppercase}
 .intro-skip:hover{color:var(--white)}
 
-/* ─── SETUP ─────────────────────────────────────────────── */
+/* ─── SETUP ── */
 #setup{overflow-y:auto;justify-content:center;padding:28px 20px 40px}
 .setup-header{text-align:center;margin-bottom:28px}
 .setup-header h1{font-family:'Bebas Neue',sans-serif;font-size:52px;color:var(--gold);letter-spacing:.1em}
@@ -62,11 +68,25 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-famil
 .tag.challenge-tag{background:rgba(14,240,192,.15);border-color:rgba(14,240,192,.3)}
 .tag button{background:none;border:none;color:var(--muted);cursor:pointer;font-size:14px;line-height:1;padding:0;transition:color .15s}
 .tag button:hover{color:var(--white)}
+.player-dot{width:9px;height:9px;border-radius:50%;display:inline-block;flex-shrink:0}
 .start-wrap{grid-column:1/-1;display:flex;justify-content:center;margin-top:8px}
 .btn-start{background:linear-gradient(135deg,#0ef0c0,#0abf99);color:#08051a;font-size:18px;font-weight:700;padding:16px 56px;border-radius:14px;font-family:'Bebas Neue',sans-serif;letter-spacing:.15em;box-shadow:0 0 30px rgba(14,240,192,.25);transition:all .2s}
 .btn-start:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 0 50px rgba(14,240,192,.4)}
 .btn-start:disabled{opacity:.35;cursor:not-allowed;transform:none}
-/* ─── CHALLENGE SUGGESTIONS ──────────────────────────────── */
+
+/* ─── SETUP OPTIONS ── */
+.setup-options{grid-column:1/-1;background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px;display:flex;flex-wrap:wrap;gap:20px 36px;align-items:flex-start}
+.options-group{display:flex;flex-direction:column;gap:8px}
+.options-label{font-size:12px;font-weight:700;color:var(--purple2);text-transform:uppercase;letter-spacing:.1em}
+.options-pills{display:flex;gap:6px;flex-wrap:wrap}
+.option-pill{padding:6px 14px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--muted);font-size:13px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .15s}
+.option-pill.active{background:var(--purple);border-color:var(--purple);color:#fff}
+.option-pill:hover:not(.active){border-color:var(--purple2);color:var(--white)}
+.toggle-row{display:flex;align-items:center;gap:10px;cursor:pointer;padding:2px 0}
+.toggle-row input[type=checkbox]{width:16px;height:16px;accent-color:var(--purple);cursor:pointer;flex-shrink:0}
+.toggle-label{font-size:14px;color:var(--white)}
+
+/* ─── SUGGESTIONS ── */
 .suggest-toggle{display:flex;align-items:center;gap:8px;margin-top:12px;cursor:pointer;color:var(--teal);font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;user-select:none;width:fit-content}
 .suggest-toggle:hover{color:#4fffd4}
 .suggest-toggle .arrow{transition:transform .25s;display:inline-block}
@@ -83,13 +103,10 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-famil
 .sugg-chip{padding:5px 11px;border-radius:16px;background:rgba(14,240,192,.1);border:1px solid rgba(14,240,192,.2);color:var(--white);font-size:12px;cursor:pointer;transition:all .15s}
 .sugg-chip:hover{background:rgba(14,240,192,.25);border-color:var(--teal);transform:translateY(-1px)}
 
-/* ─── GAME (PLAY) ────────────────────────────────────────── */
+/* ─── GAME ── */
 #game{flex-direction:column;padding:16px;gap:12px;align-items:center;justify-content:center}
 #nameWheelWrap{max-width:none!important;width:clamp(280px,44vmin,500px)}
 .game-title{font-family:'Bebas Neue',sans-serif;font-size:42px;color:var(--gold);letter-spacing:.15em;text-align:center}
-.wheels-row{display:flex;gap:24px;align-items:flex-start;justify-content:center;width:100%}
-.wheel-panel{display:flex;flex-direction:column;align-items:center;gap:10px;flex:1;max-width:460px}
-.wheel-label{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:.12em;color:var(--purple2)}
 .wheel-wrap{position:relative;width:100%;max-width:340px;aspect-ratio:1}
 .wheel-wrap canvas{width:100%;height:100%;border-radius:50%;display:block}
 .pointer{position:absolute;top:-4px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:13px solid transparent;border-right:13px solid transparent;border-top:32px solid var(--gold);filter:drop-shadow(0 2px 6px rgba(255,215,0,.6))}
@@ -101,27 +118,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-famil
 .back-link{color:var(--muted);font-size:13px;cursor:pointer;text-decoration:underline;text-underline-offset:3px;align-self:center}
 .back-link:hover{color:var(--white)}
 
-/* ─── RESULT ─────────────────────────────────────────────── */
-#result{background:rgba(8,5,26,.85)}
-.result-card{background:var(--bg2);border:1px solid rgba(124,92,252,.4);border-radius:24px;padding:40px 52px;text-align:center;max-width:600px;width:90%;box-shadow:0 0 80px rgba(124,92,252,.2);transform:translateY(40px) scale(.95);opacity:0;transition:all .5s cubic-bezier(.34,1.56,.64,1)}
-.result-card.show{transform:translateY(0) scale(1);opacity:1}
-.result-pill{display:inline-block;background:rgba(124,92,252,.2);border:1px solid rgba(124,92,252,.4);border-radius:30px;padding:5px 18px;font-size:12px;letter-spacing:.15em;text-transform:uppercase;color:var(--purple2);margin-bottom:14px}
-.result-name{font-family:'Bebas Neue',sans-serif;font-size:clamp(52px,8vw,88px);color:var(--gold);line-height:1;text-shadow:0 0 40px rgba(255,215,0,.4);animation:pulse 2s ease-in-out infinite}
-.result-divider{width:80px;height:2px;background:linear-gradient(90deg,transparent,var(--purple),transparent);margin:18px auto}
-.result-chal-label{color:var(--muted);font-size:13px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:8px}
-.result-chal{font-size:clamp(18px,3vw,26px);font-weight:700;color:var(--teal);line-height:1.3}
-.result-btns{display:flex;gap:12px;justify-content:center;margin-top:28px;flex-wrap:wrap}
-.btn-again{background:var(--purple);color:#fff;font-size:15px;padding:12px 28px;border-radius:10px}
-.btn-again:hover{background:#9b7dff}
-.btn-edit{background:rgba(255,255,255,.08);color:var(--white);font-size:15px;padding:12px 28px;border-radius:10px;border:1px solid var(--border)}
-.btn-edit:hover{background:rgba(255,255,255,.14)}
-
-/* ─── CONFETTI ────────────────────────────────────────────── */
-#confetti-canvas{position:fixed;inset:0;pointer-events:none;z-index:999}
-
-@keyframes pulse{0%,100%{text-shadow:0 0 40px rgba(255,215,0,.4)} 50%{text-shadow:0 0 80px rgba(255,215,0,.8)}}
-
-/* ─── CHALLENGE SPIN SCREEN ──────────────────────────────── */
+/* ─── CHALLENGE SCREEN ── */
 #challenge{flex-direction:column;padding:12px 16px;gap:10px;justify-content:center}
 .chal-header{text-align:center;opacity:0;transform:scale(.8) translateY(-30px);transition:opacity .7s cubic-bezier(.34,1.56,.64,1),transform .7s cubic-bezier(.34,1.56,.64,1)}
 .chal-header.show{opacity:1;transform:scale(1) translateY(0)}
@@ -143,18 +140,81 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-famil
 @keyframes chalGlow{0%,100%{text-shadow:0 0 40px rgba(255,215,0,.4)}50%{text-shadow:0 0 120px rgba(255,215,0,.95),0 0 40px rgba(255,170,0,.6)}}
 @media(max-width:700px){.chal-body{flex-direction:column}.chal-readout{width:90%;flex-direction:row;align-items:center}.chal-readout-label{display:none}}
 
+/* ─── RESULT ── */
+#result{background:rgba(8,5,26,.85)}
+.result-card{background:var(--bg2);border:1px solid rgba(124,92,252,.4);border-radius:24px;padding:40px 52px;text-align:center;max-width:600px;width:90%;box-shadow:0 0 80px rgba(124,92,252,.2);transform:translateY(40px) scale(.95);opacity:0;transition:all .5s cubic-bezier(.34,1.56,.64,1)}
+.result-card.show{transform:translateY(0) scale(1);opacity:1}
+.result-pill{display:inline-block;background:rgba(124,92,252,.2);border:1px solid rgba(124,92,252,.4);border-radius:30px;padding:5px 18px;font-size:12px;letter-spacing:.15em;text-transform:uppercase;color:var(--purple2);margin-bottom:14px}
+.result-name{font-family:'Bebas Neue',sans-serif;font-size:clamp(52px,8vw,88px);color:var(--gold);line-height:1;text-shadow:0 0 40px rgba(255,215,0,.4);animation:pulse 2s ease-in-out infinite}
+.result-divider{width:80px;height:2px;background:linear-gradient(90deg,transparent,var(--purple),transparent);margin:18px auto}
+.result-chal-label{color:var(--muted);font-size:13px;letter-spacing:.15em;text-transform:uppercase;margin-bottom:8px}
+.result-chal{font-size:clamp(18px,3vw,26px);font-weight:700;color:var(--teal);line-height:1.3}
+.result-btns{display:flex;gap:12px;justify-content:center;margin-top:24px;flex-wrap:wrap}
+.btn-start-chal{background:linear-gradient(135deg,var(--teal),#0abf99);color:#08051a;font-size:15px;font-weight:700;padding:12px 28px;border-radius:10px;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .15s}
+.btn-start-chal:hover{transform:translateY(-1px);box-shadow:0 0 20px rgba(14,240,192,.3)}
+.btn-pass{background:rgba(255,77,141,.12);border:1px solid var(--pink);color:var(--pink);font-size:14px;padding:10px 20px;border-radius:10px;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:700;transition:all .15s}
+.btn-pass:hover:not(:disabled){background:rgba(255,77,141,.25)}
+.btn-pass:disabled{opacity:.35;cursor:not-allowed}
+.btn-again{background:var(--purple);color:#fff;font-size:15px;padding:12px 28px;border-radius:10px;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:700;transition:all .15s}
+.btn-again:hover{background:#9b7dff}
+.btn-edit{background:rgba(255,255,255,.08);color:var(--white);font-size:15px;padding:12px 28px;border-radius:10px;border:1px solid var(--border);cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:700;transition:all .15s}
+.btn-edit:hover{background:rgba(255,255,255,.14)}
+
+/* ─── CONFETTI ── */
+#confetti-canvas{position:fixed;inset:0;pointer-events:none;z-index:999}
+@keyframes pulse{0%,100%{text-shadow:0 0 40px rgba(255,215,0,.4)} 50%{text-shadow:0 0 80px rgba(255,215,0,.8)}}
+
+/* ─── TIMER ── */
+#timer{background:rgba(8,5,26,.92)}
+.timer-card{background:var(--bg2);border:1px solid rgba(124,92,252,.4);border-radius:24px;padding:36px 48px;text-align:center;max-width:520px;width:90%;display:flex;flex-direction:column;align-items:center;gap:16px;box-shadow:0 0 60px rgba(124,92,252,.15)}
+.timer-player{font-family:'Bebas Neue',sans-serif;font-size:44px;color:var(--gold);letter-spacing:.1em;line-height:1}
+.timer-chal{font-size:17px;font-weight:700;color:var(--teal);line-height:1.4;max-width:360px}
+.timer-circle-wrap{position:relative;width:120px;height:120px;flex-shrink:0}
+.timer-circle-wrap svg{display:block}
+#timer-arc{stroke-dasharray:276.46 276.46;stroke-dashoffset:0;transition:stroke-dashoffset .9s linear}
+.timer-digit{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:56px;color:var(--white);transition:color .3s}
+.timer-digit.urgent{color:var(--pink)}
+.timer-btns{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+
+/* ─── VOTE ── */
+#vote{background:rgba(8,5,26,.92)}
+.vote-card{background:var(--bg2);border:1px solid rgba(255,215,0,.2);border-radius:24px;padding:40px 52px;text-align:center;max-width:520px;width:90%;box-shadow:0 0 60px rgba(255,215,0,.07)}
+.vote-question{font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--white);letter-spacing:.05em;margin-bottom:6px;line-height:1.3}
+.vote-name{color:var(--gold)}
+.vote-chal-preview{font-size:14px;color:var(--muted);margin:10px auto 28px;line-height:1.5;max-width:360px}
+.vote-btns{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
+.btn-yes{background:var(--teal);color:#08051a;font-size:16px;font-weight:700;padding:14px 36px;border-radius:12px;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .15s}
+.btn-yes:hover{background:#4fffd4;transform:translateY(-1px)}
+.btn-nope{background:rgba(255,77,141,.15);border:1px solid var(--pink);color:var(--pink);font-size:16px;font-weight:700;padding:14px 36px;border-radius:12px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .15s}
+.btn-nope:hover{background:rgba(255,77,141,.3);transform:translateY(-1px)}
+
+/* ─── LEADERBOARD ── */
+#leaderboard{background:rgba(8,5,26,.92);overflow-y:auto}
+.lb-card{background:var(--bg2);border:1px solid rgba(255,215,0,.2);border-radius:24px;padding:36px 48px;text-align:center;max-width:560px;width:90%;box-shadow:0 0 60px rgba(255,215,0,.07)}
+.lb-title{font-family:'Bebas Neue',sans-serif;font-size:52px;color:var(--gold);letter-spacing:.12em;margin-bottom:4px}
+.lb-round-info{font-size:13px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:24px}
+.lb-list{display:flex;flex-direction:column;gap:8px;margin-bottom:28px}
+.lb-row{display:flex;align-items:center;gap:12px;background:rgba(255,255,255,.04);border-radius:12px;padding:12px 16px}
+.lb-row.lb-first{background:rgba(255,215,0,.07);border:1px solid rgba(255,215,0,.15)}
+.lb-rank{font-family:'Bebas Neue',sans-serif;font-size:24px;color:var(--muted);width:28px;text-align:center;flex-shrink:0}
+.lb-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0}
+.lb-name{flex:1;font-size:16px;font-weight:700;text-align:left}
+.lb-score{font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--gold)}
+.lb-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+
 @media(max-width:640px){
   .setup-grid{grid-template-columns:1fr}
-  .wheels-row{flex-direction:column;align-items:center}
-  .wheel-panel{max-width:300px;width:100%}
+  .result-card,.vote-card,.lb-card,.timer-card{padding:28px 24px}
 }
 </style>
 </head>
 <body>
 
 <canvas id="stars"></canvas>
+<div id="round-counter">ROUND 1 / 10</div>
+<button id="fullscreen-btn" title="Toggle fullscreen">[ ]</button>
 
-<!-- LEAVE CONFIRM MODAL -->
+<!-- LEAVE MODAL -->
 <div id="leave-modal" style="display:none;position:fixed;inset:0;z-index:998;background:rgba(8,5,26,.82);align-items:center;justify-content:center;">
   <div style="background:#110d2e;border:1px solid rgba(124,92,252,.45);border-radius:22px;padding:38px 52px;text-align:center;max-width:380px;width:90%;box-shadow:0 0 60px rgba(124,92,252,.2);">
     <div style="font-family:'Bebas Neue',sans-serif;font-size:32px;color:var(--gold);letter-spacing:.1em;margin-bottom:10px;">Leave Game?</div>
@@ -169,7 +229,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-famil
 
 <!-- INTRO -->
 <div class="screen active" id="intro">
-  <div class="intro-line intro-presenter" id="iPresenter">Hope Studios Presents...</div>
+  <div class="intro-line intro-presenter" id="iPresenter">Submerged Youth Presents...</div>
   <div class="intro-line intro-title"    id="iTitle">HOT SEAT</div>
   <div class="intro-line intro-sub"      id="iSub">A Marcos Hope Production</div>
   <div class="intro-skip" id="introSkip">click to continue</div>
@@ -197,11 +257,41 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-famil
         <button class="btn btn-purple" id="addChalBtn">Add</button>
       </div>
       <div class="tag-list" id="chalTags"></div>
-      <!-- SUGGESTIONS -->
       <div class="suggest-toggle" id="suggestToggle"><span class="arrow">▶</span> Need ideas? Browse challenges</div>
       <div class="suggest-panel" id="suggestPanel">
         <div class="suggest-cats" id="suggestCats"></div>
         <div class="suggest-list" id="suggestList"></div>
+      </div>
+    </div>
+    <!-- OPTIONS -->
+    <div class="setup-options">
+      <div class="options-group">
+        <div class="options-label">Rounds</div>
+        <div class="options-pills" id="roundPills">
+          <button class="option-pill" data-rounds="5">5</button>
+          <button class="option-pill active" data-rounds="10">10</button>
+          <button class="option-pill" data-rounds="15">15</button>
+        </div>
+      </div>
+      <div class="options-group">
+        <div class="options-label">Timer</div>
+        <div class="options-pills" id="timerPills">
+          <button class="option-pill" data-timer="0">Off</button>
+          <button class="option-pill active" data-timer="30">30s</button>
+          <button class="option-pill" data-timer="60">60s</button>
+          <button class="option-pill" data-timer="90">90s</button>
+        </div>
+      </div>
+      <div class="options-group">
+        <div class="options-label">Options</div>
+        <label class="toggle-row">
+          <input type="checkbox" id="wildcardCheck" checked>
+          <span class="toggle-label">Wildcard challenges</span>
+        </label>
+        <label class="toggle-row">
+          <input type="checkbox" id="noDupCheck">
+          <span class="toggle-label">No duplicate challenges</span>
+        </label>
       </div>
     </div>
     <div class="start-wrap">
@@ -267,8 +357,57 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-famil
     <div class="result-chal-label">Challenge</div>
     <div class="result-chal" id="resultChal">—</div>
     <div class="result-btns">
+      <button class="btn-start-chal" id="startChalBtn">Start Challenge</button>
+      <button class="btn-pass" id="passBtn">Skip Challenge (1 use)</button>
+    </div>
+    <div class="result-btns" style="margin-top:10px">
       <button class="btn btn-again" id="spinAgainBtn">Spin Again</button>
       <button class="btn btn-edit"  id="editBtn">Edit Players</button>
+    </div>
+  </div>
+</div>
+
+<!-- TIMER -->
+<div class="screen" id="timer">
+  <div class="timer-card">
+    <div class="timer-player" id="timerPlayer">—</div>
+    <div class="timer-chal" id="timerChal">—</div>
+    <div class="timer-circle-wrap">
+      <svg width="120" height="120" viewBox="0 0 120 120">
+        <circle cx="60" cy="60" r="44" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="8"/>
+        <circle id="timer-arc" cx="60" cy="60" r="44" fill="none" stroke="var(--teal)" stroke-width="8"
+          stroke-linecap="round" transform="rotate(-90 60 60)"/>
+      </svg>
+      <div class="timer-digit" id="timerDigit">30</div>
+    </div>
+    <div class="timer-btns">
+      <button class="btn-start-chal" id="timerDoneBtn">Done!</button>
+      <button class="btn btn-edit" id="timerSkipBtn">Skip Timer</button>
+    </div>
+  </div>
+</div>
+
+<!-- VOTE -->
+<div class="screen" id="vote">
+  <div class="vote-card">
+    <div class="vote-question">Did <span class="vote-name" id="voteName">—</span> complete their challenge?</div>
+    <div class="vote-chal-preview" id="voteChalPreview">—</div>
+    <div class="vote-btns">
+      <button class="btn-yes" id="voteYesBtn">YES  (+1 Point)</button>
+      <button class="btn-nope" id="voteNopeBtn">NOPE</button>
+    </div>
+  </div>
+</div>
+
+<!-- LEADERBOARD -->
+<div class="screen" id="leaderboard">
+  <div class="lb-card">
+    <div class="lb-title">LEADERBOARD</div>
+    <div class="lb-round-info" id="lbRoundInfo">Round 1 of 10 complete</div>
+    <div class="lb-list" id="lbList"></div>
+    <div class="lb-btns">
+      <button class="btn-start-chal" id="lbNextBtn">Next Round</button>
+      <button class="btn btn-edit" id="lbEndBtn">End Game</button>
     </div>
   </div>
 </div>
@@ -278,7 +417,6 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-famil
 (function(){
   const c=document.getElementById('stars');
   const ctx=c.getContext('2d');
-
   let stars=[];
   function initStars(){
     c.width=window.innerWidth; c.height=window.innerHeight;
@@ -287,33 +425,23 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-famil
       const angle=Math.random()*Math.PI*2;
       const spd=0.08+Math.random()*0.18;
       stars.push({
-        x:Math.random()*c.width,
-        y:Math.random()*c.height,
-        baseR:Math.random()*1.4+0.4,
-        pulseAmp:Math.random()*1.2+0.4,
-        baseA:Math.random()*0.5+0.15,
-        phase:Math.random()*Math.PI*2,
-        pulsePhase:Math.random()*Math.PI*2,
-        speed:Math.random()*0.5+0.2,
-        pulseSpeed:Math.random()*0.4+0.15,
-        vx:Math.cos(angle)*spd,
-        vy:Math.sin(angle)*spd
+        x:Math.random()*c.width, y:Math.random()*c.height,
+        baseR:Math.random()*1.4+0.4, pulseAmp:Math.random()*1.2+0.4,
+        baseA:Math.random()*0.5+0.15, phase:Math.random()*Math.PI*2,
+        pulsePhase:Math.random()*Math.PI*2, speed:Math.random()*0.5+0.2,
+        pulseSpeed:Math.random()*0.4+0.15, vx:Math.cos(angle)*spd, vy:Math.sin(angle)*spd
       });
     }
   }
-
   let lastT=0;
   function drawStars(t){
     const dt=t-lastT; lastT=t;
     ctx.clearRect(0,0,c.width,c.height);
     const ts=t/1000;
     stars.forEach(s=>{
-      s.x+=s.vx*dt*0.06;
-      s.y+=s.vy*dt*0.06;
-      if(s.x<-4) s.x=c.width+4;
-      else if(s.x>c.width+4) s.x=-4;
-      if(s.y<-4) s.y=c.height+4;
-      else if(s.y>c.height+4) s.y=-4;
+      s.x+=s.vx*dt*0.06; s.y+=s.vy*dt*0.06;
+      if(s.x<-4) s.x=c.width+4; else if(s.x>c.width+4) s.x=-4;
+      if(s.y<-4) s.y=c.height+4; else if(s.y>c.height+4) s.y=-4;
       const a=s.baseA*(0.5+0.5*Math.sin(ts*s.speed+s.phase));
       const r=s.baseR+s.pulseAmp*(0.5+0.5*Math.sin(ts*s.pulseSpeed+s.pulsePhase));
       ctx.beginPath(); ctx.arc(s.x,s.y,r,0,Math.PI*2);
@@ -321,10 +449,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-famil
     });
     requestAnimationFrame(drawStars);
   }
-
-  initStars();
-  requestAnimationFrame(drawStars);
-
+  initStars(); requestAnimationFrame(drawStars);
   window._reinitStars=initStars;
 })();
 
@@ -332,102 +457,91 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);font-famil
 const AC = new (window.AudioContext||window.webkitAudioContext)();
 function resumeAC(){ if(AC.state==='suspended') AC.resume(); }
 
-// Master gain + soft limiter to prevent clipping/distortion
 const masterGain = AC.createGain();
 masterGain.gain.value = 0.7;
 const compressor = AC.createDynamicsCompressor();
-compressor.threshold.value = -12;
-compressor.knee.value = 6;
-compressor.ratio.value = 4;
-compressor.attack.value = 0.003;
-compressor.release.value = 0.15;
-masterGain.connect(compressor);
-compressor.connect(AC.destination);
+compressor.threshold.value = -12; compressor.knee.value = 6;
+compressor.ratio.value = 4; compressor.attack.value = 0.003; compressor.release.value = 0.15;
+masterGain.connect(compressor); compressor.connect(AC.destination);
 
 function mkOsc(freq, type='sine'){
-  const osc = AC.createOscillator();
-  osc.type = type;
-  osc.frequency.value = freq;
-  return osc;
+  const osc = AC.createOscillator(); osc.type=type; osc.frequency.value=freq; return osc;
 }
-function mkGain(val=0){
-  const g = AC.createGain();
-  g.gain.value = val;
-  return g;
-}
+function mkGain(val=0){ const g=AC.createGain(); g.gain.value=val; return g; }
 
-// Smooth envelope helper: attack, sustain, release
 function envelope(gainNode, vol, atk, sus, rel, startT){
-  const g = gainNode.gain;
+  const g=gainNode.gain;
   g.setValueAtTime(0, startT);
-  g.linearRampToValueAtTime(vol, startT + atk);
-  g.setValueAtTime(vol, startT + atk + sus);
-  g.exponentialRampToValueAtTime(0.0001, startT + atk + sus + rel);
+  g.linearRampToValueAtTime(vol, startT+atk);
+  g.setValueAtTime(vol, startT+atk+sus);
+  g.exponentialRampToValueAtTime(0.0001, startT+atk+sus+rel);
 }
 
 function playClick(){
-  resumeAC();
-  const t = AC.currentTime;
-  // Short sine blip — clean, no noise
-  const osc = mkOsc(480, 'sine');
-  const g = mkGain();
+  resumeAC(); const t=AC.currentTime;
+  const osc=mkOsc(480,'sine'), g=mkGain();
   osc.connect(g); g.connect(masterGain);
   envelope(g, 0.35, 0.002, 0.01, 0.06, t);
-  osc.start(t); osc.stop(t + 0.1);
+  osc.start(t); osc.stop(t+0.1);
 }
 
 function playWhoosh(){
-  resumeAC();
-  const t = AC.currentTime;
-  const dur = 0.4;
-  // Filtered noise sweep for clean whoosh
-  const bufSize = AC.sampleRate * dur;
-  const buf = AC.createBuffer(1, bufSize, AC.sampleRate);
-  const d = buf.getChannelData(0);
-  for(let i=0;i<bufSize;i++) d[i] = Math.random()*2-1;
-  const src = AC.createBufferSource(); src.buffer = buf;
-  const filter = AC.createBiquadFilter();
-  filter.type = 'bandpass';
-  filter.frequency.setValueAtTime(400, t);
-  filter.frequency.exponentialRampToValueAtTime(2400, t + dur);
-  filter.Q.value = 0.8;
-  const g = mkGain();
+  resumeAC(); const t=AC.currentTime, dur=0.4;
+  const bufSize=AC.sampleRate*dur, buf=AC.createBuffer(1,bufSize,AC.sampleRate);
+  const d=buf.getChannelData(0); for(let i=0;i<bufSize;i++) d[i]=Math.random()*2-1;
+  const src=AC.createBufferSource(); src.buffer=buf;
+  const filter=AC.createBiquadFilter(); filter.type='bandpass'; filter.Q.value=0.8;
+  filter.frequency.setValueAtTime(400,t); filter.frequency.exponentialRampToValueAtTime(2400,t+dur);
+  const g=mkGain();
   src.connect(filter); filter.connect(g); g.connect(masterGain);
   envelope(g, 0.28, 0.02, 0.1, 0.28, t);
-  src.start(t); src.stop(t + dur + 0.05);
+  src.start(t); src.stop(t+dur+0.05);
 }
 
 function playTick(pitch=1){
-  resumeAC();
-  const t = AC.currentTime;
-  // Clean sine tick — no harsh noise
-  const osc = mkOsc(600 * pitch, 'sine');
-  const g = mkGain();
+  resumeAC(); const t=AC.currentTime;
+  const osc=mkOsc(600*pitch,'sine'), g=mkGain();
   osc.connect(g); g.connect(masterGain);
   envelope(g, 0.22, 0.001, 0.005, 0.04, t);
-  osc.start(t); osc.stop(t + 0.055);
+  osc.start(t); osc.stop(t+0.055);
+}
+
+function playBeep(){
+  resumeAC(); const t=AC.currentTime;
+  const osc=mkOsc(880,'sine'), g=mkGain();
+  osc.connect(g); g.connect(masterGain);
+  envelope(g, 0.15, 0.002, 0.04, 0.1, t);
+  osc.start(t); osc.stop(t+0.18);
 }
 
 function playFanfare(){
   resumeAC();
-  // Chord-based fanfare with smooth ADSR — no harsh transients
-  const chords = [
-    { notes:[523.25, 659.25], dur:0.18, vol:0.22 },
-    { notes:[659.25, 783.99], dur:0.18, vol:0.22 },
-    { notes:[783.99, 987.77], dur:0.18, vol:0.22 },
-    { notes:[1046.5, 1318.5], dur:0.55, vol:0.28 },
-    { notes:[1046.5, 1318.5, 1567.98], dur:0.55, vol:0.32 },
+  const chords=[
+    {notes:[523.25,659.25],dur:.18,vol:.22},{notes:[659.25,783.99],dur:.18,vol:.22},
+    {notes:[783.99,987.77],dur:.18,vol:.22},{notes:[1046.5,1318.5],dur:.55,vol:.28},
+    {notes:[1046.5,1318.5,1567.98],dur:.55,vol:.32},
   ];
-  let t = AC.currentTime + 0.02;
-  chords.forEach(({ notes, dur, vol }) => {
-    notes.forEach(freq => {
-      const osc = mkOsc(freq, 'triangle');
-      const g = mkGain();
+  let t=AC.currentTime+0.02;
+  chords.forEach(({notes,dur,vol})=>{
+    notes.forEach(freq=>{
+      const osc=mkOsc(freq,'triangle'), g=mkGain();
       osc.connect(g); g.connect(masterGain);
-      envelope(g, vol / notes.length, 0.015, dur * 0.5, dur * 0.45, t);
-      osc.start(t); osc.stop(t + dur + 0.1);
+      envelope(g, vol/notes.length, 0.015, dur*0.5, dur*0.45, t);
+      osc.start(t); osc.stop(t+dur+0.1);
     });
-    t += dur * 0.85;
+    t+=dur*0.85;
+  });
+}
+
+// Ambient music — 3 sine oscillators, start when game begins
+let ambientNodes=null;
+function startAmbient(){
+  if(ambientNodes) return;
+  resumeAC();
+  ambientNodes=[55,110,165].map(freq=>{
+    const osc=mkOsc(freq,'sine'), g=mkGain(0.04);
+    osc.connect(g); g.connect(masterGain); osc.start();
+    return {osc,g};
   });
 }
 
@@ -440,13 +554,10 @@ const confColors=['#ffd700','#ff4d8d','#7c5cfc','#0ef0c0','#fb923c','#34d399'];
 
 function burstConfetti(x,y,n=100){
   for(let i=0;i<n;i++){
-    const a=Math.random()*Math.PI*2;
-    const sp=80+Math.random()*280;
-    confetti.push({
-      x,y,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp,
+    const a=Math.random()*Math.PI*2, sp=80+Math.random()*280;
+    confetti.push({x,y,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp,
       col:confColors[Math.floor(Math.random()*confColors.length)],
-      life:1,sz:4+Math.random()*8,rot:Math.random()*360,rspeed:(Math.random()-.5)*400
-    });
+      life:1,sz:4+Math.random()*8,rot:Math.random()*360,rspeed:(Math.random()-.5)*400});
   }
 }
 
@@ -458,9 +569,7 @@ function confettiLoop(t){
   confetti.forEach(p=>{
     p.life-=dt; p.x+=p.vx*dt; p.y+=p.vy*dt;
     p.vy+=300*dt; p.rot+=p.rspeed*dt;
-    const a=p.life*p.life;
-    confCtx.save();
-    confCtx.globalAlpha=a;
+    confCtx.save(); confCtx.globalAlpha=p.life*p.life;
     confCtx.translate(p.x,p.y); confCtx.rotate(p.rot*Math.PI/180);
     confCtx.fillStyle=p.col;
     confCtx.fillRect(-p.sz/2,-p.sz/2,p.sz,p.sz*(0.5+Math.random()*.1));
@@ -471,13 +580,7 @@ function confettiLoop(t){
 requestAnimationFrame(confettiLoop);
 
 // ─── WHEEL ENGINE ──────────────────────────────────────────────────────────
-const WHEEL_COLORS=[
-  '#7c5cfc','#0ef0c0','#ff4d8d','#ffd700',
-  '#a78bfa','#0abf99','#ff4d8d','#ffaa00',
-  '#7c5cfc','#0ef0c0','#a78bfa','#ffd700'
-];
-
-function easeOut4(t){ return 1-Math.pow(1-t,4); }
+const WHEEL_COLORS=['#7c5cfc','#0ef0c0','#ff4d8d','#ffd700','#a78bfa','#0abf99','#ff4d8d','#ffaa00','#7c5cfc','#0ef0c0','#a78bfa','#ffd700'];
 
 class SpinWheel {
   constructor(canvasId, items, colorSet){
@@ -485,9 +588,7 @@ class SpinWheel {
     this.ctx=this.canvas.getContext('2d');
     this.items=items;
     this.colors=colorSet||WHEEL_COLORS;
-    this.angle=0;
-    this.spinning=false;
-    this.onDone=null;
+    this.angle=0; this.spinning=false; this._cancelled=false;
     this.resize();
   }
 
@@ -510,12 +611,9 @@ class SpinWheel {
       ctx.fillStyle='rgba(255,255,255,.3)';
       ctx.font=`bold ${sz*.06}px DM Sans`;
       ctx.textAlign='center'; ctx.textBaseline='middle';
-      ctx.fillText('No items',cx,cy);
-      return;
+      ctx.fillText('No items',cx,cy); return;
     }
     const slice=Math.PI*2/n;
-
-    // shadow
     ctx.save(); ctx.shadowColor='rgba(0,0,0,.5)'; ctx.shadowBlur=20;
     ctx.beginPath(); ctx.arc(cx+3,cy+5,r,0,Math.PI*2);
     ctx.fillStyle='rgba(0,0,0,.3)'; ctx.fill(); ctx.restore();
@@ -524,47 +622,39 @@ class SpinWheel {
       const a0=this.angle+i*slice, a1=a0+slice;
       ctx.beginPath(); ctx.moveTo(cx,cy);
       ctx.arc(cx,cy,r,a0,a1); ctx.closePath();
-      ctx.fillStyle=this.colors[i%this.colors.length]; ctx.fill();
+      // Use per-item color directly when colors array length matches items count
+      ctx.fillStyle=this.colors.length===n ? this.colors[i] : this.colors[i%this.colors.length];
+      ctx.fill();
       ctx.strokeStyle='rgba(255,255,255,.15)'; ctx.lineWidth=2; ctx.stroke();
     }
 
-    // labels
     ctx.save();
     for(let i=0;i<n;i++){
       const a=this.angle+i*slice+slice/2;
-      ctx.save();
-      ctx.translate(cx,cy); ctx.rotate(a+Math.PI/2);
+      ctx.save(); ctx.translate(cx,cy); ctx.rotate(a+Math.PI/2);
       ctx.textAlign='center'; ctx.textBaseline='middle';
       ctx.fillStyle='rgba(255,255,255,.95)';
       let label=this.items[i]; if(label.length>14) label=label.slice(0,13)+'…';
       const fsz=Math.max(Math.floor(r*.11),11);
       ctx.font=`bold ${fsz}px 'DM Sans', sans-serif`;
       ctx.shadowColor='rgba(0,0,0,.6)'; ctx.shadowBlur=4;
-      ctx.fillText(label,0,-r*.58);
-      ctx.restore();
+      ctx.fillText(label,0,-r*.58); ctx.restore();
     }
     ctx.restore();
 
-    // rim
     ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI*2);
     ctx.strokeStyle='rgba(255,255,255,.25)'; ctx.lineWidth=4; ctx.stroke();
 
-    // stoppers — pegs on the rim that hit the notch
     for(let i=0;i<n;i++){
       const a=this.angle+i*slice;
-      ctx.save();
-      ctx.translate(cx,cy);
-      ctx.rotate(a);
+      ctx.save(); ctx.translate(cx,cy); ctx.rotate(a);
       ctx.beginPath();
       ctx.moveTo(r-3,-5); ctx.lineTo(r+11,0); ctx.lineTo(r-3,5);
-      ctx.closePath();
-      ctx.fillStyle='rgba(255,220,50,.95)';
+      ctx.closePath(); ctx.fillStyle='rgba(255,220,50,.95)';
       ctx.shadowColor='rgba(255,215,0,.8)'; ctx.shadowBlur=8;
-      ctx.fill();
-      ctx.restore();
+      ctx.fill(); ctx.restore();
     }
 
-    // center hub
     ctx.beginPath(); ctx.arc(cx,cy,sz*.055,0,Math.PI*2);
     ctx.fillStyle='#08051a'; ctx.fill();
     ctx.strokeStyle='rgba(255,255,255,.5)'; ctx.lineWidth=3; ctx.stroke();
@@ -573,64 +663,38 @@ class SpinWheel {
   spin(onDone, opts={}){
     if(this.spinning||this.items.length<1) return;
     this.spinning=true; this._cancelled=false;
-    const velMult=opts.velMult||1;
-    const onProgress=opts.onProgress||null;
-
-    const n=this.items.length;
-    const slice=Math.PI*2/n;
-    const ptr=Math.PI*3/2;
-
-    // Physics: exponential friction decay, k=0.44 for all wheels.
-    // velMult scales initial velocity: 1 = ~15s spin, 3 = ~17s but 3x faster
+    const velMult=opts.velMult||1, onProgress=opts.onProgress||null;
+    const n=this.items.length, slice=Math.PI*2/n, ptr=Math.PI*3/2;
     let vel=(28+Math.random()*6)*velMult;
     const k=0.44;
-
     const getIdx=()=>{
       const norm=((ptr-this.angle)%(Math.PI*2)+Math.PI*2)%(Math.PI*2);
       return Math.floor(norm/slice)%n;
     };
-
-    let lastIdx=getIdx();
-    let lastTime=performance.now();
-
+    let lastIdx=getIdx(), lastT=performance.now();
     const animate=(now)=>{
       if(this._cancelled){this.spinning=false;return;}
-      const dt=Math.min((now-lastTime)/1000,0.033);
-      lastTime=now;
-
-      vel*=Math.exp(-k*dt);
-      this.angle+=vel*dt;
-      this.draw();
-
-      // Stopper crossing — peg just hit the notch
+      const dt=Math.min((now-lastT)/1000,0.033); lastT=now;
+      vel*=Math.exp(-k*dt); this.angle+=vel*dt; this.draw();
       const curIdx=getIdx();
       if(curIdx!==lastIdx){
-        const pitch=Math.min(0.45+vel*0.065, 2.2);
-        playTick(pitch);
-        vel*=0.986; // tiny extra drag from the notch impact
-        lastIdx=curIdx;
+        playTick(Math.min(0.45+vel*0.065,2.2)); vel*=0.986; lastIdx=curIdx;
         if(onProgress) onProgress();
       }
-
       if(vel<0.05){
-        this.spinning=false;
-        this.draw();
-        if(onDone) onDone(getIdx(), this.items[getIdx()]);
-        return;
+        this.spinning=false; this.draw();
+        if(onDone) onDone(getIdx(), this.items[getIdx()]); return;
       }
       requestAnimationFrame(animate);
     };
-
-    lastTime=performance.now();
-    requestAnimationFrame(animate);
+    lastT=performance.now(); requestAnimationFrame(animate);
   }
 
-  cancel(){this._cancelled=true;this.spinning=false;}
+  cancel(){this._cancelled=true; this.spinning=false;}
 
   getCurrentItem(){
     if(!this.items.length) return '';
-    const n=this.items.length, slice=Math.PI*2/n;
-    const ptr=Math.PI*3/2;
+    const n=this.items.length, slice=Math.PI*2/n, ptr=Math.PI*3/2;
     const norm=((ptr-this.angle)%(Math.PI*2)+Math.PI*2)%(Math.PI*2);
     return this.items[Math.floor(norm/slice)%n];
   }
@@ -638,27 +702,39 @@ class SpinWheel {
 
 // ─── STATE ─────────────────────────────────────────────────────────────────
 let names=[], challenges=[];
+const COLOR_PALETTE=['#7c5cfc','#0ef0c0','#ff4d8d','#ffd700','#a78bfa','#ffaa00'];
+let playerColors={};   // name -> color
+let playerScores={};   // name -> int
+let playerPassUsed=new Set();
+let currentRound=1, maxRounds=10;
+let timerDuration=30;
+let wildcardEnabled=true, noDuplicates=false;
+let hotSeatHistory=[];
 let nameWheel=null, chalWheel=null;
-let lastWinner='', lastChallenge='';
-let bothSpun=false;
 let nameSpunResult=null, chalSpunResult=null;
+let timerCountdownId=null, timerTimeLeft=0, timerTotal=0;
 
-// ─── INTRO ─────────────────────────────────────────────────────────────────
+// ─── SCREEN HELPERS ────────────────────────────────────────────────────────
+const GAME_SCREENS=['game','challenge','result','timer','vote','leaderboard'];
+
 function showScreen(id){
-  document.querySelectorAll('.screen').forEach(s=>{s.classList.remove('active');});
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
+  document.getElementById('round-counter').classList.toggle('visible', GAME_SCREENS.includes(id));
 }
 
+function updateRoundCounter(){
+  document.getElementById('round-counter').textContent=`ROUND ${currentRound} / ${maxRounds}`;
+}
+
+// ─── INTRO ─────────────────────────────────────────────────────────────────
 (function runIntro(){
   const pres=document.getElementById('iPresenter');
   const title=document.getElementById('iTitle');
   const sub=document.getElementById('iSub');
-
   function goSetup(){ showScreen('setup'); }
-
   document.getElementById('introSkip').addEventListener('click',goSetup);
   document.getElementById('intro').addEventListener('click',goSetup);
-
   setTimeout(()=>{ pres.classList.add('show'); playWhoosh(); },400);
   setTimeout(()=>{ title.classList.add('show'); playFanfare(); },1600);
   setTimeout(()=>{ sub.classList.add('show'); },2200);
@@ -668,9 +744,10 @@ function showScreen(id){
 function renderTags(){
   const nt=document.getElementById('nameTags');
   const ct=document.getElementById('chalTags');
-  nt.innerHTML=names.map((n,i)=>
-    `<div class="tag">${n}<button onclick="removeName(${i})" title="Remove">✕</button></div>`
-  ).join('')||'<span style="color:var(--muted);font-size:13px">None yet</span>';
+  nt.innerHTML=names.map((n,i)=>{
+    const col=playerColors[n]||'var(--purple)';
+    return `<div class="tag"><span class="player-dot" style="background:${col}"></span>${n}<button onclick="removeName(${i})" title="Remove">✕</button></div>`;
+  }).join('')||'<span style="color:var(--muted);font-size:13px">None yet</span>';
   ct.innerHTML=challenges.map((c,i)=>
     `<div class="tag challenge-tag">${c}<button onclick="removeChal(${i})" title="Remove">✕</button></div>`
   ).join('')||'<span style="color:var(--muted);font-size:13px">None yet</span>';
@@ -682,23 +759,26 @@ function renderTags(){
   document.getElementById('setupHint').textContent=hint;
 }
 
-function removeName(i){ names.splice(i,1); renderTags(); }
+function removeName(i){
+  const n=names[i]; delete playerColors[n]; delete playerScores[n];
+  names.splice(i,1); renderTags();
+}
 function removeChal(i){ challenges.splice(i,1); renderTags(); }
 
 document.getElementById('addNameBtn').addEventListener('click',()=>{
   const inp=document.getElementById('nameInput');
-  const v=inp.value.trim();
-  if(!v) return;
-  names.push(v); inp.value=''; renderTags(); playClick();
-  inp.focus();
+  const v=inp.value.trim(); if(!v) return;
+  if(!playerColors[v]){
+    playerColors[v]=COLOR_PALETTE[Object.keys(playerColors).length % COLOR_PALETTE.length];
+  }
+  if(playerScores[v]===undefined) playerScores[v]=0;
+  names.push(v); inp.value=''; renderTags(); playClick(); inp.focus();
 });
 
 document.getElementById('addChalBtn').addEventListener('click',()=>{
   const inp=document.getElementById('chalInput');
-  const v=inp.value.trim();
-  if(!v) return;
-  challenges.push(v); inp.value=''; renderTags(); playClick();
-  inp.focus();
+  const v=inp.value.trim(); if(!v) return;
+  challenges.push(v); inp.value=''; renderTags(); playClick(); inp.focus();
 });
 
 ['nameInput','chalInput'].forEach(id=>{
@@ -710,15 +790,37 @@ document.getElementById('addChalBtn').addEventListener('click',()=>{
   });
 });
 
+// Options
+document.getElementById('roundPills').addEventListener('click',e=>{
+  const btn=e.target.closest('[data-rounds]'); if(!btn) return;
+  maxRounds=parseInt(btn.dataset.rounds);
+  document.querySelectorAll('#roundPills .option-pill').forEach(b=>b.classList.toggle('active',b===btn));
+  updateRoundCounter(); playClick();
+});
+document.getElementById('timerPills').addEventListener('click',e=>{
+  const btn=e.target.closest('[data-timer]'); if(!btn) return;
+  timerDuration=parseInt(btn.dataset.timer);
+  document.querySelectorAll('#timerPills .option-pill').forEach(b=>b.classList.toggle('active',b===btn));
+  playClick();
+});
+document.getElementById('wildcardCheck').addEventListener('change',e=>{ wildcardEnabled=e.target.checked; });
+document.getElementById('noDupCheck').addEventListener('change',e=>{ noDuplicates=e.target.checked; });
+
 document.getElementById('startBtn').addEventListener('click',()=>{
   if(names.length<2||!challenges.length) return;
-  playWhoosh();
-  showScreen('game');
-  initWheels();
+  names.forEach(n=>{ if(playerScores[n]===undefined) playerScores[n]=0; });
+  playerPassUsed=new Set();
+  hotSeatHistory=[];
+  currentRound=1; updateRoundCounter();
+  playWhoosh(); startAmbient();
+  showScreen('game'); initWheels();
 });
 
 function initWheels(){
-  nameWheel=new SpinWheel('nameWheel', [...names,...names]);
+  // Build doubled name items with matching per-item color array
+  const nameItems=[...names,...names];
+  const nameColorArr=nameItems.map(n=>playerColors[n]||COLOR_PALETTE[0]);
+  nameWheel=new SpinWheel('nameWheel', nameItems, nameColorArr);
   chalWheel=null;
   nameSpunResult=null; chalSpunResult=null;
   document.getElementById('spinNamesBtn').disabled=false;
@@ -732,31 +834,25 @@ function initWheels(){
 document.getElementById('spinNamesBtn').addEventListener('click',()=>{
   resumeAC();
   if(!nameWheel||nameWheel.spinning) return;
-  playWhoosh();
-  document.getElementById('spinNamesBtn').disabled=true;
+  playWhoosh(); document.getElementById('spinNamesBtn').disabled=true;
   const nameReadoutText=document.getElementById('nameReadoutText');
   let lastNameItem='';
   nameWheel.spin((idx,val)=>{
-    nameSpunResult=val;
-    nameReadoutText.textContent=val;
+    nameSpunResult=val; nameReadoutText.textContent=val;
     setTimeout(()=>showChallengeScreen(val),650);
   },{
     onProgress:()=>{
       const cur=nameWheel.getCurrentItem();
       if(cur&&cur!==lastNameItem){
-        lastNameItem=cur;
-        nameReadoutText.textContent=cur;
-        nameReadoutText.classList.remove('flash');
-        void nameReadoutText.offsetWidth;
+        lastNameItem=cur; nameReadoutText.textContent=cur;
+        nameReadoutText.classList.remove('flash'); void nameReadoutText.offsetWidth;
         nameReadoutText.classList.add('flash');
       }
     }
   });
 });
 
-document.getElementById('backToSetup').addEventListener('click',()=>{
-  showScreen('setup'); renderTags();
-});
+document.getElementById('backToSetup').addEventListener('click',()=>{ showScreen('setup'); renderTags(); });
 
 document.getElementById('spinChalBtn').addEventListener('click',()=>{
   resumeAC();
@@ -771,51 +867,55 @@ function showChallengeScreen(name){
   const outer=document.getElementById('chalWheelOuter');
   const readout=document.getElementById('chalReadout');
   const readoutText=document.getElementById('chalReadoutText');
-  header.classList.remove('show');
-  outer.classList.remove('show');
-  readout.classList.remove('show');
-  readoutText.textContent='—';
-
+  header.classList.remove('show'); outer.classList.remove('show');
+  readout.classList.remove('show'); readoutText.textContent='—';
   showScreen('challenge');
-
   setTimeout(()=>{ header.classList.add('show'); playWhoosh(); },80);
   setTimeout(()=>{ outer.classList.add('show'); },420);
 
-  chalWheel=new SpinWheel('chalWheel',[...challenges,...challenges]);
+  // Build challenge items; apply no-duplicates filter if enabled
+  let avail=challenges;
+  if(noDuplicates && name){
+    const usedForPlayer=hotSeatHistory.filter(h=>h.name===name).map(h=>h.challenge);
+    const filtered=challenges.filter(c=>!usedForPlayer.includes(c));
+    if(filtered.length) avail=filtered;
+  }
+  const chalItems=wildcardEnabled
+    ? [...avail,...avail,'WILDCARD','WILDCARD']
+    : [...avail,...avail];
+  chalWheel=new SpinWheel('chalWheel', chalItems);
 
   const spinChalBtn=document.getElementById('spinChalBtn');
-  spinChalBtn.disabled=true;
-  spinChalBtn.style.opacity='0';
-
-  // show readout and enable spin button after entrance
+  spinChalBtn.disabled=true; spinChalBtn.style.opacity='0';
   setTimeout(()=>{
     readoutText.textContent=chalWheel.getCurrentItem()||'—';
     readout.classList.add('show');
-    spinChalBtn.disabled=false;
-    spinChalBtn.style.opacity='1';
+    spinChalBtn.disabled=false; spinChalBtn.style.opacity='1';
   },800);
 }
 
 function spinChallengeWheel(){
   if(!chalWheel) return;
-  const outer=document.getElementById('chalWheelOuter');
   const readoutText=document.getElementById('chalReadoutText');
-  let lastItem='';
-  playWhoosh();
-
+  let lastItem=''; playWhoosh();
   chalWheel.spin((idx,val)=>{
-    chalSpunResult=val;
-    readoutText.textContent=val;
-    setTimeout(()=>showResult(nameSpunResult,val),500);
+    let finalVal=val;
+    if(val==='WILDCARD'){
+      const allChals=Object.values(SUGGESTIONS).flat();
+      finalVal=allChals[Math.floor(Math.random()*allChals.length)];
+      readoutText.textContent='WILDCARD → '+finalVal;
+    } else {
+      readoutText.textContent=val;
+    }
+    chalSpunResult=finalVal;
+    setTimeout(()=>showResult(nameSpunResult, finalVal),500);
   },{
     velMult:3,
     onProgress:()=>{
-      const current=chalWheel.getCurrentItem();
-      if(current && current!==lastItem){
-        lastItem=current;
-        readoutText.textContent=current;
-        readoutText.classList.remove('flash');
-        void readoutText.offsetWidth;
+      const cur=chalWheel.getCurrentItem();
+      if(cur&&cur!==lastItem){
+        lastItem=cur; readoutText.textContent=cur;
+        readoutText.classList.remove('flash'); void readoutText.offsetWidth;
         readoutText.classList.add('flash');
       }
     }
@@ -826,6 +926,13 @@ function spinChallengeWheel(){
 function showResult(name, chal){
   document.getElementById('resultName').textContent=name;
   document.getElementById('resultChal').textContent=chal;
+  hotSeatHistory.push({name, challenge:chal});
+
+  const passBtn=document.getElementById('passBtn');
+  const hasPass=!playerPassUsed.has(name);
+  passBtn.disabled=!hasPass;
+  passBtn.textContent=hasPass?'Skip Challenge (1 use)':'Skip Used';
+
   showScreen('result');
   setTimeout(()=>{
     document.getElementById('resultCard').classList.add('show');
@@ -834,14 +941,33 @@ function showResult(name, chal){
   },50);
 }
 
+document.getElementById('startChalBtn').addEventListener('click',()=>{
+  playClick();
+  document.getElementById('resultCard').classList.remove('show');
+  if(timerDuration>0) showTimerScreen(nameSpunResult, chalSpunResult);
+  else showVoteScreen(nameSpunResult, chalSpunResult);
+});
+
+document.getElementById('passBtn').addEventListener('click',()=>{
+  if(!nameSpunResult||playerPassUsed.has(nameSpunResult)) return;
+  playerPassUsed.add(nameSpunResult);
+  hotSeatHistory.pop(); // remove the skipped entry
+  chalSpunResult=null; playClick();
+  document.getElementById('resultCard').classList.remove('show');
+  setTimeout(()=>{
+    showChallengeScreen(nameSpunResult);
+    // auto-spin after entrance animation
+    setTimeout(()=>{ document.getElementById('spinChalBtn').click(); },1000);
+  },300);
+});
+
 document.getElementById('spinAgainBtn').addEventListener('click',()=>{
   playClick();
   document.getElementById('resultCard').classList.remove('show');
   showScreen('game');
   setTimeout(()=>{
     nameSpunResult=null; chalSpunResult=null;
-    if(chalWheel) chalWheel.cancel();
-    chalWheel=null;
+    if(chalWheel) chalWheel.cancel(); chalWheel=null;
     nameWheel.angle=0; nameWheel.draw();
     document.getElementById('spinNamesBtn').disabled=false;
     document.getElementById('nameReadoutText').textContent=nameWheel.getCurrentItem()||'—';
@@ -854,6 +980,124 @@ document.getElementById('editBtn').addEventListener('click',()=>{
   showScreen('setup'); renderTags();
 });
 
+// ─── TIMER ─────────────────────────────────────────────────────────────────
+function showTimerScreen(name, chal){
+  document.getElementById('timerPlayer').textContent=name;
+  document.getElementById('timerChal').textContent=chal;
+  showScreen('timer');
+  startTimerCountdown(timerDuration, name, chal);
+}
+
+function startTimerCountdown(seconds, name, chal){
+  stopTimer();
+  timerTimeLeft=seconds; timerTotal=seconds;
+  const digitEl=document.getElementById('timerDigit');
+  const arcEl=document.getElementById('timer-arc');
+  const CIRC=276.46;
+
+  function updateDisplay(){
+    const frac=timerTimeLeft/timerTotal;
+    arcEl.setAttribute('stroke-dashoffset', ((1-frac)*CIRC).toFixed(2));
+    digitEl.textContent=timerTimeLeft;
+    digitEl.classList.toggle('urgent', timerTimeLeft<10);
+  }
+  updateDisplay();
+
+  timerCountdownId=setInterval(()=>{
+    timerTimeLeft--;
+    playBeep();
+    updateDisplay();
+    if(timerTimeLeft<=0){
+      stopTimer();
+      setTimeout(()=>showVoteScreen(name, chal), 600);
+    }
+  },1000);
+}
+
+function stopTimer(){
+  if(timerCountdownId){ clearInterval(timerCountdownId); timerCountdownId=null; }
+}
+
+document.getElementById('timerDoneBtn').addEventListener('click',()=>{
+  stopTimer(); playClick(); showVoteScreen(nameSpunResult, chalSpunResult);
+});
+document.getElementById('timerSkipBtn').addEventListener('click',()=>{
+  stopTimer(); playClick(); showVoteScreen(nameSpunResult, chalSpunResult);
+});
+
+// ─── VOTE ──────────────────────────────────────────────────────────────────
+function showVoteScreen(name, chal){
+  document.getElementById('voteName').textContent=name;
+  document.getElementById('voteChalPreview').textContent=chal;
+  showScreen('vote');
+}
+
+document.getElementById('voteYesBtn').addEventListener('click',()=>{
+  if(nameSpunResult && playerScores[nameSpunResult]!==undefined)
+    playerScores[nameSpunResult]++;
+  playFanfare(); burstConfetti(window.innerWidth/2, window.innerHeight/2, 80);
+  showLeaderboard();
+});
+document.getElementById('voteNopeBtn').addEventListener('click',()=>{
+  playClick(); showLeaderboard();
+});
+
+// ─── LEADERBOARD ───────────────────────────────────────────────────────────
+function showLeaderboard(){
+  const sorted=[...names].sort((a,b)=>(playerScores[b]||0)-(playerScores[a]||0));
+  document.getElementById('lbList').innerHTML=sorted.map((n,i)=>`
+    <div class="lb-row${i===0?' lb-first':''}">
+      <div class="lb-rank">${i+1}</div>
+      <div class="lb-dot" style="background:${playerColors[n]||'var(--purple)'}"></div>
+      <div class="lb-name">${n}</div>
+      <div class="lb-score">${playerScores[n]||0}</div>
+    </div>`).join('');
+  document.getElementById('lbRoundInfo').textContent=`Round ${currentRound} of ${maxRounds} complete`;
+  showScreen('leaderboard');
+}
+
+document.getElementById('lbNextBtn').addEventListener('click',()=>{
+  playClick(); currentRound++; updateRoundCounter();
+  showScreen('game'); initWheels();
+});
+document.getElementById('lbEndBtn').addEventListener('click',()=>{
+  playClick();
+  currentRound=1; updateRoundCounter();
+  names.forEach(n=>{ playerScores[n]=0; });
+  playerPassUsed=new Set(); hotSeatHistory=[];
+  nameSpunResult=null; chalSpunResult=null;
+  showScreen('setup'); renderTags();
+});
+
+// ─── FULLSCREEN ────────────────────────────────────────────────────────────
+const fsBtn=document.getElementById('fullscreen-btn');
+fsBtn.addEventListener('click',()=>{
+  if(!document.fullscreenElement){
+    document.documentElement.requestFullscreen().catch(()=>{});
+    fsBtn.textContent='✕';
+  } else {
+    document.exitFullscreen().catch(()=>{}); fsBtn.textContent='[ ]';
+  }
+});
+document.addEventListener('fullscreenchange',()=>{
+  fsBtn.textContent=document.fullscreenElement?'✕':'[ ]';
+});
+
+// ─── SWIPE TO SPIN ─────────────────────────────────────────────────────────
+function addSwipeSpin(canvasId, spinBtnId){
+  const canvas=document.getElementById(canvasId);
+  let px=0, py=0, pt=0;
+  canvas.addEventListener('pointerdown',e=>{ px=e.clientX; py=e.clientY; pt=performance.now(); });
+  canvas.addEventListener('pointerup',e=>{
+    const dx=e.clientX-px, dy=e.clientY-py;
+    const dt=(performance.now()-pt)/1000; if(dt<=0) return;
+    const speed=Math.sqrt(dx*dx+dy*dy)/dt;
+    if(speed>200) document.getElementById(spinBtnId).click();
+  });
+}
+addSwipeSpin('nameWheel','spinNamesBtn');
+addSwipeSpin('chalWheel','spinChalBtn');
+
 // ─── RESIZE ────────────────────────────────────────────────────────────────
 window.addEventListener('resize',()=>{
   if(window._reinitStars) window._reinitStars();
@@ -861,89 +1105,40 @@ window.addEventListener('resize',()=>{
   if(nameWheel) nameWheel.resize();
   if(chalWheel) chalWheel.resize();
 });
-
-// keep chalWheelWrap sized correctly since it lives in a different screen
 new ResizeObserver(()=>{ if(chalWheel) chalWheel.resize(); })
   .observe(document.getElementById('chalWheelWrap'));
 
 // ─── CHALLENGE SUGGESTIONS ─────────────────────────────────────────────────
-const SUGGESTIONS = {
-  'Funny': [
-    'Do your best celebrity impression','Talk in an accent for 30 seconds',
-    'Tell your most embarrassing story','Make everyone laugh without saying anything',
-    'Do your best slow-motion walk across the room','Narrate your life like a nature documentary',
-    'Speak in rhymes for the next 2 minutes','Do your best old-person impression',
-    'Pretend to be a news anchor reporting on something boring','Try to lick your elbow',
-  ],
-  'Physical': [
-    'Do your best dance move','Do 10 jumping jacks while singing','Moonwalk across the room',
-    'Hold a plank for 20 seconds','Do your best robot dance','Spin 5 times then walk in a straight line',
-    'Act out your favorite movie scene silently','Do the worm (or attempt it)',
-    'Hop on one foot while saying the ABCs','Do your best sports victory celebration',
-  ],
-  'Brain': [
-    'Say the alphabet backwards','Name 10 animals in 10 seconds',
-    'Count to 20 in a different language','Name 5 books of the Bible in 5 seconds',
-    'Spell your full name backwards out loud','Name the 12 disciples in 30 seconds',
-    'Recite a Bible verse from memory','Name 7 fruits that start with a different letter',
-    'List 5 US presidents in 10 seconds','Count backward from 20 by 2s',
-  ],
-  'Perform': [
-    'Sing the first verse of your favorite song','Tell a joke that makes someone laugh',
-    'Beatbox for 15 seconds','Read the next Bible verse in your best dramatic voice',
-    'Freestyle rap about the person to your left','Do a 30-second stand-up comedy bit',
-    'Impersonate your favorite teacher or leader','Recite a tongue twister 3 times fast',
-    'Hum a song until someone guesses it','Describe your week as if it were an epic movie',
-  ],
-  'Social': [
-    'Give everyone in the room a genuine compliment','Share your most unpopular opinion',
-    'Tell us something nobody in the room knows about you','Say something nice about the person to your right',
-    'Share your most embarrassing talent','Describe yourself using only 3 words',
-    'Name your top 3 dream dinner guests (living or dead)','Tell us your weirdest hidden talent',
-    'If you were a pizza topping, what would you be and why?','Share a childhood memory in 30 seconds',
-  ],
-  'Faith': [
-    'Share your favorite Bible verse and why','Name 5 books of the Old Testament',
-    'Share one thing God has been teaching you lately','Describe Jesus in 3 words',
-    'Name the fruit of the Spirit from memory','Share a prayer request with the group',
-    'Tell us about a time God surprised you','Recite the Lord\'s Prayer',
-    'Name 3 parables Jesus told','Share one way you want to grow in faith this year',
-  ],
+const SUGGESTIONS={
+  'Funny':['Do your best celebrity impression','Talk in an accent for 30 seconds','Tell your most embarrassing story','Make everyone laugh without saying anything','Do your best slow-motion walk across the room','Narrate your life like a nature documentary','Speak in rhymes for the next 2 minutes','Do your best old-person impression','Pretend to be a news anchor reporting on something boring','Try to lick your elbow'],
+  'Physical':['Do your best dance move','Do 10 jumping jacks while singing','Moonwalk across the room','Hold a plank for 20 seconds','Do your best robot dance','Spin 5 times then walk in a straight line','Act out your favorite movie scene silently','Do the worm (or attempt it)','Hop on one foot while saying the ABCs','Do your best sports victory celebration'],
+  'Brain':['Say the alphabet backwards','Name 10 animals in 10 seconds','Count to 20 in a different language','Name 5 books of the Bible in 5 seconds','Spell your full name backwards out loud','Name the 12 disciples in 30 seconds','Recite a Bible verse from memory','Name 7 fruits that start with a different letter','List 5 US presidents in 10 seconds','Count backward from 20 by 2s'],
+  'Perform':['Sing the first verse of your favorite song','Tell a joke that makes someone laugh','Beatbox for 15 seconds','Read the next Bible verse in your best dramatic voice','Freestyle rap about the person to your left','Do a 30-second stand-up comedy bit','Impersonate your favorite teacher or leader','Recite a tongue twister 3 times fast','Hum a song until someone guesses it','Describe your week as if it were an epic movie'],
+  'Social':['Give everyone in the room a genuine compliment','Share your most unpopular opinion','Tell us something nobody in the room knows about you','Say something nice about the person to your right','Share your most embarrassing talent','Describe yourself using only 3 words','Name your top 3 dream dinner guests (living or dead)','Tell us your weirdest hidden talent','If you were a pizza topping, what would you be and why?','Share a childhood memory in 30 seconds'],
+  'Faith':['Share your favorite Bible verse and why','Name 5 books of the Old Testament','Share one thing God has been teaching you lately','Describe Jesus in 3 words','Name the fruit of the Spirit from memory','Share a prayer request with the group','Tell us about a time God surprised you','Recite the Lord\'s Prayer','Name 3 parables Jesus told','Share one way you want to grow in faith this year'],
 };
 
-let activeCat = Object.keys(SUGGESTIONS)[0];
+let activeCat=Object.keys(SUGGESTIONS)[0];
 
 function buildSuggestions(){
-  const catsEl = document.getElementById('suggestCats');
-  const listEl = document.getElementById('suggestList');
-  catsEl.innerHTML = Object.keys(SUGGESTIONS).map(cat =>
+  const catsEl=document.getElementById('suggestCats');
+  const listEl=document.getElementById('suggestList');
+  catsEl.innerHTML=Object.keys(SUGGESTIONS).map(cat=>
     `<button class="cat-btn${cat===activeCat?' active':''}" onclick="selectCat(this,'${cat}')">${cat}</button>`
   ).join('');
-  listEl.innerHTML = SUGGESTIONS[activeCat].map(s =>
-    `<div class="sugg-chip" onclick="addSuggestion(this,'${s.replace(/'/g,"\\'").replace(/"/g,'&quot;')}')">${challenges.includes(s)?'✓':'+' } ${s}</div>`
+  listEl.innerHTML=SUGGESTIONS[activeCat].map(s=>
+    `<div class="sugg-chip" onclick="addSuggestion(this,'${s.replace(/'/g,"\\'").replace(/"/g,'&quot;')}')">${challenges.includes(s)?'✓':'+'} ${s}</div>`
   ).join('');
 }
-
-function selectCat(el, cat){
-  activeCat = cat;
-  buildSuggestions();
-  playClick();
+function selectCat(el,cat){ activeCat=cat; buildSuggestions(); playClick(); }
+function addSuggestion(el,s){
+  if(!challenges.includes(s)){ challenges.push(s); renderTags(); buildSuggestions(); playClick(); }
 }
-
-function addSuggestion(el, s){
-  if(!challenges.includes(s)){
-    challenges.push(s);
-    renderTags();
-    buildSuggestions();
-    playClick();
-  }
-}
-
-document.getElementById('suggestToggle').addEventListener('click', () => {
-  const tog = document.getElementById('suggestToggle');
-  const panel = document.getElementById('suggestPanel');
-  const isOpen = tog.classList.toggle('open');
-  panel.classList.toggle('open', isOpen);
+document.getElementById('suggestToggle').addEventListener('click',()=>{
+  const tog=document.getElementById('suggestToggle');
+  const panel=document.getElementById('suggestPanel');
+  const isOpen=tog.classList.toggle('open');
+  panel.classList.toggle('open',isOpen);
   if(isOpen) buildSuggestions();
   playClick();
 });
@@ -951,51 +1146,40 @@ document.getElementById('suggestToggle').addEventListener('click', () => {
 renderTags();
 
 // ─── ESC NAVIGATION ────────────────────────────────────────────────────────
-const leaveModal = document.getElementById('leave-modal');
+const leaveModal=document.getElementById('leave-modal');
+function showLeaveModal(){ leaveModal.style.display='flex'; playClick(); }
+function hideLeaveModal(){ leaveModal.style.display='none'; }
 
-function showLeaveModal(){
-  leaveModal.style.display = 'flex';
-  playClick();
-}
-function hideLeaveModal(){
-  leaveModal.style.display = 'none';
-}
+document.getElementById('leave-confirm').addEventListener('click',()=>{ hideLeaveModal(); window.close(); });
+document.getElementById('leave-cancel').addEventListener('click',()=>{ hideLeaveModal(); playClick(); });
+leaveModal.addEventListener('click',e=>{ if(e.target===leaveModal) hideLeaveModal(); });
 
-document.getElementById('leave-confirm').addEventListener('click', () => {
-  hideLeaveModal();
-  window.close();
-});
-document.getElementById('leave-cancel').addEventListener('click', () => {
-  hideLeaveModal();
-  playClick();
-});
-leaveModal.addEventListener('click', e => {
-  if(e.target === leaveModal) hideLeaveModal();
-});
-
-document.addEventListener('keydown', e => {
-  if(e.key !== 'Escape') return;
-  if(leaveModal.style.display === 'flex'){ hideLeaveModal(); return; }
-  const active = document.querySelector('.screen.active')?.id;
-  if(active === 'result'){
+document.addEventListener('keydown',e=>{
+  if(e.key!=='Escape') return;
+  if(leaveModal.style.display==='flex'){ hideLeaveModal(); return; }
+  const active=document.querySelector('.screen.active')?.id;
+  if(active==='timer'){
+    stopTimer(); playClick(); showScreen('result');
+    setTimeout(()=>document.getElementById('resultCard').classList.add('show'),50);
+  } else if(active==='vote'){
+    playClick(); showScreen('result');
+    setTimeout(()=>document.getElementById('resultCard').classList.add('show'),50);
+  } else if(active==='result'){
     playClick();
     document.getElementById('resultCard').classList.remove('show');
     showScreen('game');
-  } else if(active === 'challenge'){
-    if(chalWheel) chalWheel.cancel();
-    chalWheel=null;
-    playClick();
-    nameSpunResult=null;
+  } else if(active==='challenge'){
+    if(chalWheel) chalWheel.cancel(); chalWheel=null;
+    playClick(); nameSpunResult=null;
     nameWheel.angle=0; nameWheel.draw();
     document.getElementById('spinNamesBtn').disabled=false;
     showScreen('game');
-  } else if(active === 'game'){
-    playClick();
-    showScreen('setup');
-    renderTags();
-  } else if(active === 'setup'){
+  } else if(active==='game'){
+    playClick(); showScreen('setup'); renderTags();
+  } else if(active==='setup'){
     showLeaveModal();
   }
+  // leaderboard: no ESC out per spec
 });
 </script>
 </body>
